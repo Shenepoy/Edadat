@@ -44,6 +44,9 @@ coverage/
 # FVM Version Cache
 .fvm/
 
+# Semantic repository search index
+.zvec-grep/
+
 # OS generated files
 Thumbs.db
 .DS_Store

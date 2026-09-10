@@ -1,6 +1,6 @@
 name: flutter_settings_framework
 description: Declarative Flutter settings with bilingual search, a Riverpod adapter, and ready-made settings UI.
-version: 0.7.2
+version: 0.8.0
 homepage: https://github.com/Zyzto/edadat
 repository: https://github.com/Zyzto/edadat
 issue_tracker: https://github.com/Zyzto/edadat/issues
@@ -16,8 +16,8 @@ screenshots:
     path: screenshots/settings-en-dark.png
 
 environment:
-  sdk: ^3.0.0
-  flutter: ">=3.0.0"
+  sdk: ^3.11.0
+  flutter: ">=3.11.0"
 
 dependencies:
   flutter:
@@ -25,8 +25,12 @@ dependencies:
   shared_preferences: ^2.5.5
   flutter_riverpod: ^3.4.2
   easy_localization: ^3.0.8
+  safaeh: ^0.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

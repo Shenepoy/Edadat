@@ -70,10 +70,7 @@ class ProfileNotificationGroup extends StatelessWidget {
         child: title,
       ),
       subtitle: subtitle,
-      children: [
-        ...children,
-        if (footer != null) footer!,
-      ],
+      children: [...children, ?footer],
     );
   }
 }

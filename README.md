@@ -121,7 +121,7 @@ Rendered from the [`example/`](example/) catalog (`flutter test test/screenshots
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.7.2
+  flutter_settings_framework: ^0.8.0
 ```
 
 Or:
@@ -137,14 +137,63 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.7.2
+      ref: v0.8.0
 ```
 
 ```dart
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 ```
 
-Current version: **0.7.2**.
+Current version: **0.8.0**.
+
+### Optional Safaeh page index
+
+Safaeh is included as a dependency, but no Safaeh widget is mounted by the
+default settings UI. Import the separate entrypoint only when the host wants
+Safaeh's page-index chrome:
+
+```dart
+import 'package:flutter_settings_framework/safaeh.dart';
+
+SafaehSettingsPageIndexOverlay(
+  title: 'On this page',
+  sections: registry.getSortedSections(),
+  sectionKeys: sectionKeys,
+  labelBuilder: (section) => translate(section.titleKey),
+  activeId: activeSectionId,
+  onSelect: jumpToSection,
+);
+```
+
+The normal `flutter_settings_framework.dart` entrypoint remains unchanged;
+search indexing and result ranking continue to come from Edadat's
+`SearchIndex`. The same entrypoint also exposes the animated search UI:
+
+```dart
+SafaehSettingsSearchButton(
+  isOpen: searchOpen,
+  onPressed: toggleSearch,
+),
+
+Stack(
+  fit: StackFit.expand,
+  children: [
+    const SettingsBody(),
+    SafaehSettingsSearchOverlay(
+      isOpen: searchOpen,
+      onClose: closeSearch,
+      searchIndex: searchIndex,
+      onResultSelected: jumpToSetting,
+      sectionTitleBuilder: sectionTitle,
+      settingTitleBuilder: settingTitle,
+    ),
+  ],
+)
+```
+
+The overlay uses Safaeh's glass appearance, keeps close and clear actions
+separate, groups results by section without repeated breadcrumbs, and leaves
+navigation and setting permissions to the host app.
 
 ---
 

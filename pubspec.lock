@@ -397,6 +397,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.2"
+  safaeh:
+    dependency: "direct main"
+    description:
+      name: safaeh
+      sha256: "5f7349cdf8466946320ef4243b81e649283656be68c80ba72ac4413744a30158"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   shared_preferences:
     dependency: "direct main"
     description:

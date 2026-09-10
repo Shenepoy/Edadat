@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] - 2026-09-10
+
+### Added
+- Opt-in Safaeh integration via `package:flutter_settings_framework/safaeh.dart`.
+- Edadat section adapters for Safaeh's wide and overlay page indexes.
+- Safaeh-backed settings search trigger, glass overlay, compact result list,
+  and explicit clear/close behavior.
+
+### Changed
+- Raise the minimum Dart/Flutter versions to 3.11 to match Safaeh.
+
 ## [0.7.2] - 2026-08-22
 
 ### Fixed

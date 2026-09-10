@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Padded section title with an optional trailing action.
 class ProfileSectionHeader extends StatelessWidget {
-  const ProfileSectionHeader({
-    super.key,
-    required this.title,
-    this.trailing,
-  });
+  const ProfileSectionHeader({super.key, required this.title, this.trailing});
 
   final Widget title;
   final Widget? trailing;
@@ -27,7 +23,7 @@ class ProfileSectionHeader extends StatelessWidget {
               child: title,
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

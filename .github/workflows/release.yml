@@ -77,46 +77,6 @@ jobs:
           body_path: /tmp/notes.md
           generate_release_notes: true
 
-  pages:
-    name: GitHub Pages
-    needs: verify
-    runs-on: ubuntu-latest
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Build example web
-        working-directory: example
-        run: |
-          flutter pub get
-          flutter build web --release --base-href "/${{ github.event.repository.name }}/"
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: example/build/web
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
   # Requires Automated publishing on pub.dev Admin → GitHub Actions
   # for flutter_settings_framework → Zyzto/edadat, tag pattern v{{version}}.
   # Docs: https://dart.dev/tools/pub/automated-publishing
@@ -124,5 +84,32 @@ jobs:
     name: Publish to pub.dev
     needs: verify
     permissions:
+      contents: read
       id-token: write # OIDC for pub.dev
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # setup-dart provisions a short-lived OIDC token for pub.dev. Remove it
+      # while resolving public dependencies because pub.dev treats the
+      # publisher token as an upload credential, then restore it for publish.
+      - name: Set up Dart and OIDC publisher token
+        uses: dart-lang/setup-dart@v1
+
+      - name: Set up Flutter
+        uses: flutter-actions/setup-flutter@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: |
+          dart pub token remove https://pub.dev || true
+          flutter pub get
+          dart pub token add https://pub.dev --env-var PUB_TOKEN
+
+      - name: Publish dry run
+        run: flutter pub publish --dry-run
+
+      - name: Publish to pub.dev
+        run: flutter pub publish --force

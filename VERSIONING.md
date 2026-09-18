@@ -12,7 +12,7 @@ Edadat (`flutter_settings_framework`) uses **[SemVer](https://semver.org/)**:
 
 ## Tag format
 
-Git tags are `vMAJOR.MINOR.PATCH` (example: `v0.7.2`).
+Git tags are `vMAJOR.MINOR.PATCH` (example: `v0.9.0`).
 
 The tag **must** match `version:` in [`pubspec.yaml`](pubspec.yaml) (build metadata `+N` is ignored for tagging).
 
@@ -22,7 +22,7 @@ Prefer **pub.dev**:
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.7.2
+  flutter_settings_framework: ^0.9.0
 ```
 
 Or pin a **git tag** (not `main` or a raw commit):
@@ -32,22 +32,25 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.7.2
+      ref: v0.9.0
 ```
 
 ## Release checklist
 
 1. Update `version:` in `pubspec.yaml`.
-2. Add a `## [X.Y.Z] - YYYY-MM-DD` section to `CHANGELOG.md`.
-3. Commit on `main` and push.
-4. Run:
+2. Add a `## [X.Y.Z] - YYYY-MM-DD` section to [`CHANGELOG.md`](CHANGELOG.md).
+3. Run `./scripts/check_version.sh`.
+4. Commit on `main` and push.
+5. Run:
 
 ```bash
 ./scripts/release.sh
 ```
 
-This runs analyze + tests, creates an annotated tag `vX.Y.Z`, and pushes it.  
-The **Release** GitHub Action then re-verifies the tag, runs tests, creates a GitHub Release, publishes to **pub.dev** (OIDC; requires Automated publishing enabled for this repo), and deploys the example catalog to **GitHub Pages**. A push to `main` also deploys Pages after CI tests pass.
+This runs analyze + tests, creates an annotated tag `vX.Y.Z`, and pushes it.
+The **Release** GitHub Action then re-verifies the tag, runs tests, creates a
+GitHub Release, and publishes to **pub.dev** (OIDC; requires Automated
+publishing enabled for this repo).
 
 Dry-run:
 
@@ -55,9 +58,14 @@ Dry-run:
 ./scripts/release.sh --dry-run
 ```
 
+Optional `VERSION` file, if present, must match pubspec.
+
 ## CI
 
 | Workflow | Trigger | What it does |
 |----------|---------|----------------|
-| [CI](.github/workflows/ci.yml) | push/PR to `main`, workflow_dispatch | version check, analyze, package + example tests; on `main` after tests: build `example/` web and deploy [GitHub Pages](https://zyzto.github.io/Edadat/) |
-| [Release](.github/workflows/release.yml) | tag `v*.*.*` | tag↔pubspec check, CHANGELOG check, tests, GitHub Release, pub.dev publish, GitHub Pages |
+| [CI](.github/workflows/ci.yml) | push/PR to `main`, or **Run workflow** | version check, `dart analyze --fatal-infos`, `flutter test --coverage`, example analyze + test, screenshot captures. On `main` (not PRs) a green run then builds `example/` web and deploys [zyzto.github.io/Edadat](https://zyzto.github.io/Edadat/) |
+| [Release](.github/workflows/release.yml) | tag `v*.*.*` | tag↔pubspec check, CHANGELOG check, tests, GitHub Release, pub.dev publish |
+
+`scripts/check_version.sh` verifies pubspec semver, a matching CHANGELOG
+heading, and an optional `VERSION` file.

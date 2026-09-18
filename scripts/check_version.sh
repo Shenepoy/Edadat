@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Verify pubspec.yaml version is valid semver and optionally matches a git tag.
+# Verify pubspec.yaml version is valid semver and matches CHANGELOG / optional VERSION.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PUBSPEC="$ROOT/pubspec.yaml"
+CHANGELOG="$ROOT/CHANGELOG.md"
+VERSION_FILE="$ROOT/VERSION"
 
 version="$(sed -nE 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+)(\+[0-9]+)?/\1/p' "$PUBSPEC" | head -1)"
 if [[ -z "$version" ]]; then
@@ -17,6 +19,21 @@ if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 echo "pubspec version: $version"
+
+if ! grep -qE "^## \[${version}\]" "$CHANGELOG"; then
+  echo "error: CHANGELOG.md has no ## [$version] section" >&2
+  exit 1
+fi
+echo "CHANGELOG has ## [$version]"
+
+if [[ -f "$VERSION_FILE" ]]; then
+  file_version="$(tr -d '[:space:]' < "$VERSION_FILE")"
+  if [[ "$file_version" != "$version" ]]; then
+    echo "error: VERSION ($file_version) does not match pubspec ($version)" >&2
+    exit 1
+  fi
+  echo "VERSION file matches"
+fi
 
 if [[ "${1:-}" == "--expect-tag" ]]; then
   tag="${2:-}"

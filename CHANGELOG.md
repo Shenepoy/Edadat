@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+Tags are `vX.Y.Z` and must match `version:` in [`pubspec.yaml`](pubspec.yaml).
+See [VERSIONING.md](VERSIONING.md).
+
+## [Unreleased]
+
+### Changed
+- Align CI and version checks with Safaeh: require a CHANGELOG heading for
+  the current pubspec version, exclude `example/` from the package analyzer,
+  and drop the per-push publish dry-run (Release still dry-runs before
+  pub.dev).
+
 ## [0.9.0] - 2026-09-18
 
 ### Added

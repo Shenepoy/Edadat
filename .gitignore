@@ -30,6 +30,10 @@
 .pub/
 /build/
 /coverage/
+example/.dart_tool/
+example/build/
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
 
 # Symbolication related
 app.*.symbols

@@ -28,14 +28,28 @@ void main() {
 
   testWidgets('search English', (tester) async {
     await pumpExampleApp(tester);
-    await tester.enterText(find.byType(TextField), 'theme');
+    await tester.tap(
+      find.byKey(const ValueKey('safaeh_settings_search_button')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('safaeh_settings_search_field')),
+      'theme',
+    );
     await tester.pumpAndSettle();
     await saveScreenshot(tester, 'search-en');
   });
 
   testWidgets('search Arabic', (tester) async {
     await pumpExampleApp(tester, language: 'ar');
-    await tester.enterText(find.byType(TextField), 'مظهر');
+    await tester.tap(
+      find.byKey(const ValueKey('safaeh_settings_search_button')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('safaeh_settings_search_field')),
+      'مظهر',
+    );
     await tester.pumpAndSettle();
     await saveScreenshot(tester, 'search-ar');
   });

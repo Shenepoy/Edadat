@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
+import 'package:flutter_settings_framework/safaeh.dart';
 
 /// Inline dummy dashboard used by the example account section.
 class ExampleProfileDashboard extends ConsumerStatefulWidget {
-  const ExampleProfileDashboard({
-    super.key,
-    required this.translate,
-  });
+  const ExampleProfileDashboard({super.key, required this.translate});
 
   final String Function(String key) translate;
 
@@ -39,44 +37,36 @@ class _ExampleProfileDashboardState
   String Function(String key) get _tr => widget.translate;
 
   void _snack(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Future<bool> _confirm(String title) async {
+  Future<bool> _confirm(String title, {bool isDestructive = false}) async {
     final t = _tr;
-    final ok = await showDialog<bool>(
+    final ok = await showSafaehConfirm(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(t('cancel')),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(t('confirm')),
-          ),
-        ],
-      ),
+      title: title,
+      content: t('confirm_subtitle'),
+      confirmLabel: t('confirm'),
+      cancelLabel: t('cancel'),
+      isDestructive: isDestructive,
+      dismissReturnsFalse: true,
+      maxHeight: MediaQuery.sizeOf(context).height * 0.75,
+      useRootNavigator: false,
     );
-    return ok ?? false;
+    return ok == true;
   }
 
   Future<void> _showText(String title, String body) {
-    final t = _tr;
-    return showDialog<void>(
+    return showSafaehInfo(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(t('confirm')),
-          ),
-        ],
-      ),
+      title: title,
+      content: body,
+      primaryLabel: _tr('confirm'),
+      showSecondaryAction: false,
+      maxHeight: MediaQuery.sizeOf(context).height * 0.75,
+      useRootNavigator: false,
     );
   }
 
@@ -107,14 +97,9 @@ class _ExampleProfileDashboardState
   }
 
   Widget _sessionGroup(BuildContext context, {required List<Widget> children}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Material(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
-        clipBehavior: Clip.antiAlias,
-        child: Column(children: children),
-      ),
+    return SafaehBorderedListChrome(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Column(children: children),
     );
   }
 
@@ -122,15 +107,20 @@ class _ExampleProfileDashboardState
     required String nameKey,
     required VoidCallback apply,
   }) async {
-    if (!await _confirm(_tr('session_revoke'))) return;
+    if (!await _confirm(_tr('session_revoke'), isDestructive: true)) {
+      return;
+    }
     apply();
-    _snack(
-      _tr('session_revoked_named').replaceAll('{device}', _tr(nameKey)),
-    );
+    _snack(_tr('session_revoked_named').replaceAll('{device}', _tr(nameKey)));
   }
 
   Future<void> _revokeAllOthers(void Function(VoidCallback fn) sync) async {
-    if (!await _confirm(_tr('session_sign_out_all_confirm'))) return;
+    if (!await _confirm(
+      _tr('session_sign_out_all_confirm'),
+      isDestructive: true,
+    )) {
+      return;
+    }
     sync(() {
       _phoneSession = false;
       _tabletSession = false;
@@ -141,179 +131,126 @@ class _ExampleProfileDashboardState
 
   Future<void> _openSessionsSheet() async {
     final t = _tr;
-    await showModalBottomSheet<void>(
+    await showSafaeh<void>(
       context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (sheetContext, setSheet) {
-            void sync(VoidCallback fn) {
-              setState(fn);
-              setSheet(() {});
-            }
+      title: t('header_sessions'),
+      maxHeight: MediaQuery.sizeOf(context).height * 0.86,
+      useRootNavigator: false,
+      child: StatefulBuilder(
+        builder: (sheetContext, setSheet) {
+          void sync(VoidCallback fn) {
+            setState(fn);
+            setSheet(() {});
+          }
 
-            final others = <Widget>[
-              if (_phoneSession)
-                ProfileSessionTile(
-                  leading: const Icon(Icons.smartphone_outlined),
-                  title: Text(t('session_phone')),
-                  subtitle: Text(t('session_phone_sub')),
-                  trailing: _revokeButton(
-                    () => _revokeSession(
-                      nameKey: 'session_phone',
-                      apply: () => sync(() => _phoneSession = false),
+          final others = <Widget>[
+            if (_phoneSession)
+              ProfileSessionTile(
+                leading: const Icon(Icons.smartphone_outlined),
+                title: Text(t('session_phone')),
+                subtitle: Text(t('session_phone_sub')),
+                trailing: _revokeButton(
+                  () => _revokeSession(
+                    nameKey: 'session_phone',
+                    apply: () => sync(() => _phoneSession = false),
+                  ),
+                ),
+              ),
+            if (_tabletSession)
+              ProfileSessionTile(
+                leading: const Icon(Icons.tablet_mac_outlined),
+                title: Text(t('session_tablet')),
+                subtitle: Text(t('session_tablet_sub')),
+                trailing: _revokeButton(
+                  () => _revokeSession(
+                    nameKey: 'session_tablet',
+                    apply: () => sync(() => _tabletSession = false),
+                  ),
+                ),
+              ),
+            if (_browserSession)
+              ProfileSessionTile(
+                leading: const Icon(Icons.language),
+                title: Text(t('session_browser')),
+                subtitle: Text(t('session_browser_sub')),
+                trailing: _revokeButton(
+                  () => _revokeSession(
+                    nameKey: 'session_browser',
+                    apply: () => sync(() => _browserSession = false),
+                  ),
+                ),
+              ),
+          ];
+
+          final theme = Theme.of(sheetContext);
+
+          return buildSafaehSheetShell(
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                  child: Text(
+                    t(
+                      'session_sheet_hint',
+                    ).replaceAll('{count}', '$_sessionCount'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
-              if (_tabletSession)
-                ProfileSessionTile(
-                  leading: const Icon(Icons.tablet_mac_outlined),
-                  title: Text(t('session_tablet')),
-                  subtitle: Text(t('session_tablet_sub')),
-                  trailing: _revokeButton(
-                    () => _revokeSession(
-                      nameKey: 'session_tablet',
-                      apply: () => sync(() => _tabletSession = false),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                  child: SafaehSectionHeader(
+                    label: t('session_current'),
+                    compact: true,
                   ),
                 ),
-              if (_browserSession)
-                ProfileSessionTile(
-                  leading: const Icon(Icons.language),
-                  title: Text(t('session_browser')),
-                  subtitle: Text(t('session_browser_sub')),
-                  trailing: _revokeButton(
-                    () => _revokeSession(
-                      nameKey: 'session_browser',
-                      apply: () => sync(() => _browserSession = false),
+                _sessionGroup(
+                  sheetContext,
+                  children: [
+                    ProfileSessionTile(
+                      leading: const Icon(Icons.laptop_outlined),
+                      title: Text(t('session_laptop')),
+                      subtitle: Text(t('session_laptop_sub')),
+                      current: true,
+                      badge: Text(t('session_current')),
+                      onTap: () => _snack(t('session_current_hint')),
                     ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 12, 4, 8),
+                  child: SafaehSectionHeader(
+                    label: t('session_others'),
+                    compact: true,
                   ),
                 ),
-            ];
-
-            final theme = Theme.of(sheetContext);
-            final labelStyle = theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurfaceVariant,
-            );
-
-            return DraggableScrollableSheet(
-              expand: false,
-              initialChildSize: 0.68,
-              minChildSize: 0.42,
-              maxChildSize: 0.94,
-              builder: (sheetContext, scrollController) {
-                return Scaffold(
-                  backgroundColor: Colors.transparent,
-                  body: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              t('header_sessions'),
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              t('session_sheet_hint').replaceAll(
-                                '{count}',
-                                '$_sessionCount',
-                              ),
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          controller: scrollController,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
-                              child: Text(
-                                t('session_current'),
-                                style: labelStyle,
-                              ),
-                            ),
-                            _sessionGroup(
-                              sheetContext,
-                              children: [
-                                ProfileSessionTile(
-                                  leading: const Icon(Icons.laptop_outlined),
-                                  title: Text(t('session_laptop')),
-                                  subtitle: Text(t('session_laptop_sub')),
-                                  current: true,
-                                  badge: Text(t('session_current')),
-                                  onTap: () =>
-                                      _snack(t('session_current_hint')),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
-                              child: Text(t('session_others'), style: labelStyle),
-                            ),
-                            if (others.isEmpty)
-                              _sessionGroup(
-                                sheetContext,
-                                children: [
-                                  ProfilePlaceholder(
-                                    kind: ProfilePlaceholderKind.empty,
-                                    icon: const Icon(
-                                      Icons.devices_other_outlined,
-                                    ),
-                                    title: Text(t('session_others_empty')),
-                                    message: Text(
-                                      t('session_others_empty_body'),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else
-                              _sessionGroup(sheetContext, children: others),
-                          ],
-                        ),
-                      ),
-                      SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (others.isNotEmpty) ...[
-                                OutlinedButton(
-                                  onPressed: () => _revokeAllOthers(sync),
-                                  child: Text(t('session_sign_out_all')),
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                              FilledButton(
-                                onPressed: () => Navigator.pop(sheetContext),
-                                child: Text(t('session_done')),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
+                if (others.isEmpty)
+                  SafaehEmptyState(
+                    icon: Icons.devices_other_outlined,
+                    title: t('session_others_empty'),
+                    subtitle: t('session_others_empty_body'),
+                    iconSize: 40,
+                  )
+                else
+                  _sessionGroup(sheetContext, children: others),
+              ],
+            ),
+            actions: [
+              if (others.isNotEmpty)
+                OutlinedButton(
+                  onPressed: () => _revokeAllOthers(sync),
+                  child: Text(t('session_sign_out_all')),
+                ),
+              FilledButton(
+                onPressed: () => safaehPop(sheetContext),
+                child: Text(t('session_done')),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -388,8 +325,8 @@ class _ExampleProfileDashboardState
               child: ProfileBudgetCard(
                 title: Text(t('budget_photos')),
                 caption: Text(t('budget_caption')),
-                limit: SettingsLtr(child: Text(t('budget_limit_near'))),
-                spent: SettingsLtr(child: Text(t('budget_spent_near'))),
+                limit: SafaehLtrText(t('budget_limit_near')),
+                spent: SafaehLtrText(t('budget_spent_near')),
                 progress: 0.84,
                 attention: ProfileBudgetAttention.near,
               ),
@@ -405,13 +342,11 @@ class _ExampleProfileDashboardState
               child: ProfileBudgetCard(
                 title: Text(t('budget_downloads')),
                 caption: Text(t('budget_caption')),
-                limit: SettingsLtr(child: Text(t('budget_limit_over'))),
-                spent: SettingsLtr(
-                  child: Text(
-                    _downloadsCleared
-                        ? t('budget_spent_cleared')
-                        : t('budget_spent_over'),
-                  ),
+                limit: SafaehLtrText(t('budget_limit_over')),
+                spent: SafaehLtrText(
+                  _downloadsCleared
+                      ? t('budget_spent_cleared')
+                      : t('budget_spent_over'),
                 ),
                 progress: _downloadsCleared ? 0.2 : 1.2,
                 attention: _downloadsCleared
@@ -423,9 +358,9 @@ class _ExampleProfileDashboardState
         ],
         if (_show('all') || _show('security')) ...[
           ProfileNotificationTile(
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: const Icon(Icons.login_outlined, size: 18),
+            leading: const SafaehGlyphAvatar(
+              icon: Icons.login_outlined,
+              radius: 18,
             ),
             title: Text(t('notif_signin')),
             subtitle: Text(t('notif_signin_body')),
@@ -436,10 +371,13 @@ class _ExampleProfileDashboardState
             },
           ),
           ProfileNotificationGroup(
-            leading: CircleAvatar(
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: const Icon(Icons.shield_outlined, size: 18),
+            leading: SafaehGlyphAvatar(
+              icon: Icons.shield_outlined,
+              radius: 18,
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest,
+              foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             title: Text(t('notif_grouped')),
             subtitle: Text(t('notif_grouped_sub')),
@@ -537,7 +475,7 @@ class _ExampleProfileDashboardState
           ),
           ProfileCopyRow(
             label: Text(t('copy_account_id')),
-            value: const SettingsLtr(child: Text('ada-1042')),
+            value: const SafaehLtrText('ada-1042'),
             copyTooltip: t('copy_tooltip'),
             onCopy: () {
               Clipboard.setData(const ClipboardData(text: 'ada-1042'));
@@ -550,7 +488,8 @@ class _ExampleProfileDashboardState
             title: Text(t('timeline_theme')),
             subtitle: Text(t('timeline_theme_body')),
             time: Text(t('timeline_theme_time')),
-            onTap: () => _showText(t('timeline_theme'), t('timeline_theme_body')),
+            onTap: () =>
+                _showText(t('timeline_theme'), t('timeline_theme_body')),
           ),
           ProfileTimelineTile(
             leading: const Icon(Icons.ios_share_outlined),
@@ -572,6 +511,7 @@ class _ExampleProfileDashboardState
               final next = !_twoFactor;
               if (await _confirm(
                 next ? t('two_fa_turn_on') : t('two_fa_turn_off'),
+                isDestructive: !next,
               )) {
                 setState(() => _twoFactor = next);
               }
@@ -583,33 +523,16 @@ class _ExampleProfileDashboardState
             subtitle: Text(_recoveryEmail ?? t('security_recovery_missing')),
             ok: _recoveryEmail != null,
             onTap: () async {
-              final controller = TextEditingController(
-                text: _recoveryEmail ?? '',
-              );
-              final next = await showDialog<String>(
+              final next = await showSafaehTextInput(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(t('recovery_prompt')),
-                  content: TextField(
-                    controller: controller,
-                    autofocus: true,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(hintText: t('recovery_hint')),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(t('cancel')),
-                    ),
-                    FilledButton(
-                      onPressed: () =>
-                          Navigator.pop(context, controller.text.trim()),
-                      child: Text(t('confirm')),
-                    ),
-                  ],
-                ),
+                title: t('recovery_prompt'),
+                doneLabel: t('confirm'),
+                cancelLabel: t('cancel'),
+                hint: t('recovery_hint'),
+                initialValue: _recoveryEmail ?? '',
+                keyboardType: TextInputType.emailAddress,
+                useRootNavigator: false,
               );
-              controller.dispose();
               if (next != null && next.isNotEmpty) {
                 setState(() => _recoveryEmail = next);
                 _snack(t('recovery_saved'));
@@ -703,7 +626,7 @@ class _ExampleProfileDashboardState
             title: Text(t('action_sign_out')),
             destructive: true,
             onTap: () async {
-              if (await _confirm(t('sign_out_confirm'))) {
+              if (await _confirm(t('sign_out_confirm'), isDestructive: true)) {
                 _snack(t('signed_out'));
               }
             },
@@ -722,25 +645,10 @@ class _DemoBudgetPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final panel = Container(
-      width: double.infinity,
+    return SafaehBorderedListChrome(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.45)),
-      ),
+      onTap: onTap,
       child: child,
-    );
-    if (onTap == null) return panel;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: panel,
-      ),
     );
   }
 }

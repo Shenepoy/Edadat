@@ -1,8 +1,11 @@
 # Settings Framework Example
 
 Bilingual `RegistrySettingsPage` catalog for `flutter_settings_framework`
-(definitions, Riverpod wiring, tiles, EN/AR search, `dependsOn`).
-Language and theme toggles sit above the catalog (same chrome as Safaeh).
+(definitions, Riverpod wiring, tiles, EN/AR search, `dependsOn`), with Safaeh's
+“On this page” index and glass search overlay wired into the host app.
+Language and theme toggles sit above the catalog (same chrome as Safaeh), and
+setting pickers, text input, confirmations, info sheets, and the sessions
+panel use Safaeh 0.5's adaptive surfaces and list/status chrome.
 
 Live: [zyzto.github.io/Edadat](https://zyzto.github.io/Edadat/)
 
@@ -55,8 +58,10 @@ flutter run
 1. **Setting definitions** — Bool, Enum, Color, Double, Int, String, StringList, Action
 2. **Registry** — sections + settings, including `dependsOn`
 3. **Initialization** — Riverpod overrides via `initializeSettings` + `PreIndexedLocalizationProvider`
-4. **UI** — `RegistrySettingsPage` tiles, search, info/action rows
-5. **Search** — English and Arabic terms against the same index
+4. **UI** — `RegistrySettingsPage` tiles, info/action rows, and host overlays
+5. **Search** — Safaeh's glass search overlay with English and Arabic terms
 6. **Reactive updates** — language, theme mode, and accent color drive `MaterialApp`
 7. **Layout toggle** — app-bar switch between mobile catalog and desktop split view
-8. **Language + theme toggles** — overlay chrome with circular theme reveal
+8. **On this page** — Safaeh page-index overlay on mobile and rail on desktop
+9. **Language + theme toggles** — overlay chrome with circular theme reveal
+10. **Adaptive Safaeh surfaces** — pickers, text input, confirmations, info sheets, and the sessions sheet

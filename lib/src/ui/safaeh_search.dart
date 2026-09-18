@@ -110,17 +110,10 @@ class SafaehSettingsSearchResults extends StatelessWidget {
         children.add(
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 4),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                sectionLabel,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+            child: safaeh.SafaehSectionHeader(
+              label: sectionLabel,
+              compact: true,
+              labelColor: Theme.of(context).colorScheme.primary,
             ),
           ),
         );
@@ -617,27 +610,10 @@ class _SafaehSettingsEmptySearch extends StatelessWidget {
     final copy =
         message ??
         settingsEmptySearchFallback(query, Directionality.of(context));
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 36,
-            color: colorScheme.onSurface.withValues(alpha: 0.42),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            copy,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
+    return safaeh.SafaehEmptyState(
+      icon: Icons.search_off,
+      title: copy,
+      iconSize: 36,
     );
   }
 }

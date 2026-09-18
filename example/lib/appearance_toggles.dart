@@ -11,6 +11,7 @@ import 'theme_ripple.dart';
 const double _kLanguageMenuWidth = 92;
 const double _kToggleSize = 44;
 const double _kMenuGap = 4;
+const double _kSearchActionInset = 52;
 
 const Duration _kMenuIn = Duration(milliseconds: 180);
 const Duration _kMenuOut = Duration(milliseconds: 120);
@@ -219,7 +220,9 @@ class _CatalogAppearanceTogglesState extends State<CatalogAppearanceToggles>
         Positioned.directional(
           textDirection: dir,
           top: 0,
-          end: 0,
+          // Keep the app-bar search action at the true trailing edge. The
+          // demo controls live just to its leading side on narrow screens.
+          end: _kSearchActionInset,
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsetsDirectional.only(end: 4, top: 2),

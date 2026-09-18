@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] - 2026-09-18
+
+### Added
+- `RegistrySettingsPage` host seams for external search and page-index:
+  `showSearch`, `scrollController`, `scrollViewKey`, `sectionKeys`,
+  `bodyOverlay`, and `RegistrySettingsPageState.selectSearchResult`.
+
+### Changed
+- Depend on Safaeh **^0.5.0** and re-export its current public API from
+  `package:flutter_settings_framework/safaeh.dart` (list/status chrome,
+  info/action sheets, material theme seams). Hosts no longer need a
+  `dependency_overrides` pin to use Safaeh 0.5.
+- Example catalog uses Safaeh 0.5 chrome: material theme seams, glyphs,
+  LTR text, info sheets, bordered lists, and empty/search headers.
+
 ## [0.8.0] - 2026-09-10
 
 ### Added

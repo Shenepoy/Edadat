@@ -6,6 +6,7 @@ const exampleTranslations = <String, Map<String, String>>{
   'en': {
     'app_title': 'Edadat',
     'search_hint': 'Search settings...',
+    'on_this_page': 'On this page',
     'empty_search': 'No settings found for "{query}"',
     'general': 'General',
     'appearance': 'Appearance',
@@ -53,6 +54,7 @@ const exampleTranslations = <String, Map<String, String>>{
     'name_dialog': 'Display name',
     'cancel': 'Cancel',
     'confirm': 'Confirm',
+    'confirm_subtitle': 'Are you sure?',
     'layout_mobile': 'Mobile view',
     'layout_desktop': 'Desktop view',
     'empty_detail': 'Select a setting to view details',
@@ -176,6 +178,7 @@ const exampleTranslations = <String, Map<String, String>>{
   'ar': {
     'app_title': 'إعدادات',
     'search_hint': 'ابحث في الإعدادات...',
+    'on_this_page': 'في هذه الصفحة',
     'empty_search': 'لم يُعثر على إعدادات تطابق «{query}»',
     'general': 'عام',
     'appearance': 'المظهر',
@@ -223,6 +226,7 @@ const exampleTranslations = <String, Map<String, String>>{
     'name_dialog': 'الاسم المعروض',
     'cancel': 'إلغاء',
     'confirm': 'تأكيد',
+    'confirm_subtitle': 'هل أنت متأكد؟',
     'layout_mobile': 'عرض الجوال',
     'layout_desktop': 'عرض سطح المكتب',
     'empty_detail': 'اختر إعداداً لعرض التفاصيل',
@@ -428,11 +432,7 @@ const themeModeSetting = EnumSetting(
   titleKey: 'theme',
   subtitleKey: 'theme_subtitle',
   options: ['system', 'light', 'dark'],
-  optionLabels: {
-    'system': 'system',
-    'light': 'light',
-    'dark': 'dark',
-  },
+  optionLabels: {'system': 'system', 'light': 'light', 'dark': 'dark'},
   icon: Icons.brightness_6,
   section: 'general',
   order: 1,
@@ -479,13 +479,7 @@ const themeColorSetting = ColorSetting(
   icon: Icons.color_lens_outlined,
   section: 'appearance',
   order: 0,
-  colorOptions: [
-    0xFF8B6914,
-    0xFF6200EE,
-    0xFF006C51,
-    0xFFB3261E,
-    0xFF1D4E89,
-  ],
+  colorOptions: [0xFF8B6914, 0xFF6200EE, 0xFF006C51, 0xFFB3261E, 0xFF1D4E89],
   searchTerms: {
     'en': ['color', 'accent', 'seed'],
     'ar': ['لون', 'تمييز'],
@@ -746,9 +740,7 @@ PreIndexedLocalizationProvider createExampleLocalization() {
   });
 }
 
-Future<SettingsProviders> bootExampleSettings({
-  SettingsStorage? storage,
-}) {
+Future<SettingsProviders> bootExampleSettings({SettingsStorage? storage}) {
   return initializeSettings(
     registry: createExampleRegistry(),
     storage: storage ?? SharedPreferencesStorage(),

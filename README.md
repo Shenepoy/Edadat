@@ -121,7 +121,7 @@ Rendered from the [`example/`](example/) catalog (`flutter test test/screenshots
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.8.0
+  flutter_settings_framework: ^0.9.0
 ```
 
 Or:
@@ -137,20 +137,20 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.8.0
+      ref: v0.9.0
 ```
 
 ```dart
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 ```
 
-Current version: **0.8.0**.
+Current version: **0.9.0**.
 
-### Optional Safaeh page index
+### Optional Safaeh chrome
 
 Safaeh is included as a dependency, but no Safaeh widget is mounted by the
-default settings UI. Import the separate entrypoint only when the host wants
-Safaeh's page-index chrome:
+default settings UI. Import the separate entrypoint when the host wants
+Safaeh's page-index, search, or adaptive modal chrome:
 
 ```dart
 import 'package:flutter_settings_framework/safaeh.dart';
@@ -194,6 +194,33 @@ Stack(
 The overlay uses Safaeh's glass appearance, keeps close and clear actions
 separate, groups results by section without repeated breadcrumbs, and leaves
 navigation and setting permissions to the host app.
+
+The same entrypoint re-exports Safaeh **^0.5.0**: adaptive sheets, list/status
+chrome (`SafaehEmptyState`, `SafaehSectionHeader`, `SafaehGlyphAvatar`,
+`SafaehLtrText`, …), info/action sheets, and `applySafaehMaterialChrome`.
+Sheets render as a bottom sheet on phones and a centered dialog on wider
+layouts:
+
+```dart
+return SafaehTheme(
+  data: const SafaehThemeData(
+    floatingAppearance: SafaehFloatingAppearance(
+      style: SafaehFloatingSurfaceStyle.glass,
+    ),
+  ),
+  child: MaterialApp(...),
+);
+
+final choice = await showSafaehTilePicker<String>(
+  context: context,
+  title: 'Theme',
+  selected: currentTheme,
+  options: const [
+    SafaehTileOption(value: 'light', label: 'Light'),
+    SafaehTileOption(value: 'dark', label: 'Dark'),
+  ],
+);
+```
 
 ---
 
@@ -395,7 +422,7 @@ Set `visible: false` on internal settings so they never appear in search (`order
 The hosted catalog is the `example/` web build. CI deploys it after tests pass
 on `main`.
 
-See [`example/`](example/) for a bilingual `RegistrySettingsPage` catalog: Bool, Enum, Color, Double, Int, String, StringList, Action, `dependsOn`, and EN/AR search. Language and theme toggles sit above the catalog (same chrome as [Safaeh](https://github.com/Zyzto/Safaeh)).
+See [`example/`](example/) for a bilingual `RegistrySettingsPage` catalog: Bool, Enum, Color, Double, Int, String, StringList, Action, `dependsOn`, Safaeh's “On this page” index, and the new glass search overlay. Language and theme toggles sit above the catalog (same chrome as [Safaeh](https://github.com/Zyzto/Safaeh)).
 
 The example is package-style (web only in-tree); analyze with:
 

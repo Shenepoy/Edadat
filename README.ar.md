@@ -146,7 +146,7 @@
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.8.0
+  flutter_settings_framework: ^0.9.0
 ```
 
 <div dir="rtl" lang="ar">
@@ -170,7 +170,7 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.8.0
+      ref: v0.9.0
 ```
 
 ```dart
@@ -179,7 +179,7 @@ import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 
 <div dir="rtl" lang="ar">
 
-الإصدار الحالي: **0.8.0**.
+الإصدار الحالي: **0.9.0**.
 
 </div>
 
@@ -424,7 +424,7 @@ final results = searchIndex.search('عربي');
 
 الكتالوج المستضاف هو بناء ويب <span dir="ltr"><code>example/</code></span>. التكامل المستمر ينشره بعد نجاح الاختبارات على <span dir="ltr"><code>main</code></span>.
 
-انظر <span dir="ltr"><a href="example/"><code>example/</code></a></span> لكتالوج bilingual على <span dir="ltr"><code>RegistrySettingsPage</code></span>: Bool و Enum و Color و Double و Int و String و StringList و Action و <span dir="ltr"><code>dependsOn</code></span> وبحث إنجليزي/عربي. تبديل اللغة والسمة فوق الكتالوج (نفس chrome في <span dir="ltr"><a href="https://github.com/Zyzto/Safaeh">Safaeh</a></span>).
+انظر <span dir="ltr"><a href="example/"><code>example/</code></a></span> لكتالوج bilingual على <span dir="ltr"><code>RegistrySettingsPage</code></span>: Bool و Enum و Color و Double و Int و String و StringList و Action و <span dir="ltr"><code>dependsOn</code></span> وفهرس <span dir="ltr"><code>On this page</code></span> من Safaeh وواجهة البحث الزجاجية الجديدة، مع بحث إنجليزي/عربي. تبديل اللغة والسمة فوق الكتالوج (نفس chrome في <span dir="ltr"><a href="https://github.com/Zyzto/Safaeh">Safaeh</a></span> <span dir="ltr">0.5</span>)، كما تستخدم pickers وحقول الإدخال والتأكيدات ولوحة الجلسات وأفاتار/نصوص LTR أسطح Safaeh الحالية.
 
 المثال بأسلوب package (web فقط في المستودع)؛ حلّل بـ:
 

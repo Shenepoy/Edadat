@@ -45,6 +45,12 @@ class RegistrySettingsPage extends ConsumerStatefulWidget {
   /// Search field hint.
   final String searchHint;
 
+  /// Whether to render the built-in persistent search field.
+  ///
+  /// Set this to `false` when the host supplies another search surface, such
+  /// as [SafaehSettingsSearchOverlay].
+  final bool showSearch;
+
   /// Maps section title key to display string (e.g. [key] => key.tr()).
   final String Function(String sectionKey) sectionTitleBuilder;
 
@@ -87,12 +93,36 @@ class RegistrySettingsPage extends ConsumerStatefulWidget {
   /// Set to `true`/`false` to force desktop or stacked (mobile) layout.
   final bool? splitLayout;
 
+  /// Optional controller for the main settings list.
+  ///
+  /// Supplying the controller lets host-owned navigation, such as a page
+  /// index, scroll the same list as this page.
+  final ScrollController? scrollController;
+
+  /// Optional key attached to the main settings list.
+  ///
+  /// This is useful for host-owned scroll-spy integrations.
+  final GlobalKey? scrollViewKey;
+
+  /// Optional keys attached to the rendered section cards.
+  ///
+  /// Sections without an entry are rendered normally. The keys are useful for
+  /// host-owned page indexes and scroll-to-section navigation.
+  final Map<String, GlobalKey>? sectionKeys;
+
+  /// Optional overlay rendered above the page body.
+  ///
+  /// The overlay receives the page body's full size and is useful for
+  /// host-owned search or page-index controls.
+  final Widget? bodyOverlay;
+
   const RegistrySettingsPage({
     super.key,
     required this.registry,
     required this.settings,
     this.title = 'Settings',
     this.searchHint = 'Search settings...',
+    this.showSearch = true,
     this.sectionTitleBuilder = _defaultSectionTitleBuilder,
     this.enumLabelBuilder,
     this.subSectionTitleBuilder,
@@ -105,16 +135,21 @@ class RegistrySettingsPage extends ConsumerStatefulWidget {
     this.actions,
     this.emptyDetailMessage,
     this.splitLayout,
+    this.scrollController,
+    this.scrollViewKey,
+    this.sectionKeys,
+    this.bodyOverlay,
   });
 
   static String _defaultSectionTitleBuilder(String key) => key;
 
   @override
   ConsumerState<RegistrySettingsPage> createState() =>
-      _RegistrySettingsPageState();
+      RegistrySettingsPageState();
 }
 
-class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
+/// State API for host-owned navigation integrations.
+class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
@@ -123,6 +158,15 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   final Map<String, bool> _sectionExpanded = {};
   String? _selectedSectionId;
   String? _pendingScrollKey;
+
+  /// Select a result from an external search surface.
+  ///
+  /// The page applies the same behavior as its built-in search: it clears the
+  /// current query, opens the target section, selects the desktop detail pane
+  /// when applicable, and scrolls to/highlights the setting.
+  Future<void> selectSearchResult(SearchResult result) {
+    return _onResultSelected(result);
+  }
 
   @override
   void initState() {
@@ -244,6 +288,11 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
         ? _filterSearchResults(searchResults)
         : const <SearchResult>[];
 
+    Widget withScrollViewKey(Widget child) {
+      final key = widget.scrollViewKey;
+      return key == null ? child : KeyedSubtree(key: key, child: child);
+    }
+
     final Widget listPane;
     if (hasSearch && filteredSearch.isEmpty) {
       listPane = EmptySearchResults(
@@ -260,10 +309,12 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
         children: _searchResultWidgets(settings, registry, filteredSearch),
       );
     } else {
-      listPane = ListView(
-        key: const ValueKey('settings_list'),
-        controller: _scrollController,
-        children: _buildSections(settings, registry, isSplit),
+      listPane = withScrollViewKey(
+        ListView(
+          key: const ValueKey('settings_list'),
+          controller: widget.scrollController ?? _scrollController,
+          children: _buildSections(settings, registry, isSplit),
+        ),
       );
     }
 
@@ -295,13 +346,9 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
             ),
           );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: widget.actions,
-      ),
-      body: Column(
-        children: [
+    final body = Column(
+      children: [
+        if (widget.showSearch)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: SettingsSearchBar(
@@ -311,9 +358,24 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
               focusNode: _searchFocusNode,
             ),
           ),
-          Expanded(child: bodyContent),
-        ],
+        Expanded(child: bodyContent),
+      ],
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: widget.actions,
       ),
+      body: widget.bodyOverlay == null
+          ? body
+          : Stack(
+              fit: StackFit.expand,
+              children: [
+                body,
+                Positioned.fill(child: widget.bodyOverlay!),
+              ],
+            ),
     );
   }
 
@@ -334,20 +396,24 @@ class _RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
       final sectionTitle = widget.sectionTitleBuilder(section.titleKey);
       final icon = section.icon ?? Icons.settings;
 
+      final sectionWidget = CardSettingsSection(
+        title: sectionTitle,
+        icon: icon,
+        isExpanded: isExpanded,
+        onExpansionChanged: (expanded) =>
+            _onSectionExpansionChanged(section.key, expanded),
+        sectionId: section.key,
+        isSelected: _selectedSectionId == section.key && isLandscape,
+        isLandscape: isLandscape,
+        onLandscapeTap: () => _showSectionInDetail(section.key),
+        // Tiles (and their [GlobalKey]s) live in the detail pane when split.
+        children: isLandscape ? const <Widget>[] : children,
+      );
+      final sectionKey = widget.sectionKeys?[section.key];
       result.add(
-        CardSettingsSection(
-          title: sectionTitle,
-          icon: icon,
-          isExpanded: isExpanded,
-          onExpansionChanged: (expanded) =>
-              _onSectionExpansionChanged(section.key, expanded),
-          sectionId: section.key,
-          isSelected: _selectedSectionId == section.key && isLandscape,
-          isLandscape: isLandscape,
-          onLandscapeTap: () => _showSectionInDetail(section.key),
-          // Tiles (and their [GlobalKey]s) live in the detail pane when split.
-          children: isLandscape ? const <Widget>[] : children,
-        ),
+        sectionKey == null
+            ? sectionWidget
+            : KeyedSubtree(key: sectionKey, child: sectionWidget),
       );
     }
     return result;

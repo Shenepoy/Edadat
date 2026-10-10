@@ -156,6 +156,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   final SettingAnchorRegistry _anchors = SettingAnchorRegistry();
   String _searchQuery = '';
   final Map<String, bool> _sectionExpanded = {};
+  final Map<String, bool> _subSectionExpanded = {};
   String? _selectedSectionId;
   String? _pendingScrollKey;
 
@@ -214,6 +215,18 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     }
   }
 
+  String _subSectionId(String sectionKey, String subKey) =>
+      '$sectionKey/$subKey';
+
+  bool _isSubSectionExpanded(String sectionKey, String subKey) =>
+      _subSectionExpanded[_subSectionId(sectionKey, subKey)] ?? false;
+
+  void _setSubSectionExpanded(String sectionKey, String subKey, bool expanded) {
+    final id = _subSectionId(sectionKey, subKey);
+    if (_subSectionExpanded[id] == expanded) return;
+    setState(() => _subSectionExpanded[id] = expanded);
+  }
+
   Future<void> _onResultSelected(SearchResult result) async {
     final setting = result.setting;
     final sectionKey = setting.section;
@@ -227,6 +240,10 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
       if (sectionKey != null) {
         _sectionExpanded[sectionKey] = true;
         widget.onSectionExpansionChanged?.call(sectionKey, true);
+        final subKey = setting.subSection;
+        if (subKey != null && subKey.isNotEmpty) {
+          _subSectionExpanded[_subSectionId(sectionKey, subKey)] = true;
+        }
       }
       if (useSplit && section != null && sectionKey != null) {
         _selectedSectionId = sectionKey;
@@ -430,25 +447,31 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
       ..sort((a, b) => (a ?? '').compareTo(b ?? ''));
 
     for (final subKey in keys) {
-      final settingsList = bySub[subKey]!;
-      if (subKey != null && subKey.isNotEmpty) {
-        final subTitle = widget.subSectionTitleBuilder?.call(subKey) ?? subKey;
-        result.add(SettingsSubsectionHeader(
-          title: subTitle,
-          icon: Icons.subdirectory_arrow_right,
-        ));
-      }
+      final settingsList = bySub[subKey]!
+          .where((setting) => setting.visible)
+          .toList();
+      if (settingsList.isEmpty) continue;
+      final tiles = <Widget>[];
       for (final setting in settingsList) {
-        if (setting is ActionSetting) {
-          final tile = _buildTileForSetting(settings, setting);
-          if (tile != null) {
-            result.add(_anchors.wrap(setting.key, tile));
-          }
-          continue;
-        }
         final tile = _buildTileForSetting(settings, setting);
-        if (tile != null) result.add(_anchors.wrap(setting.key, tile));
+        if (tile != null) tiles.add(_anchors.wrap(setting.key, tile));
       }
+      if (tiles.isEmpty) continue;
+      if (subKey != null && subKey.isNotEmpty) {
+        final expanded = _isSubSectionExpanded(sectionKey, subKey);
+        final subTitle = widget.subSectionTitleBuilder?.call(subKey) ?? subKey;
+        result.add(
+          SettingsCollapsibleSubsection(
+            title: subTitle,
+            expanded: expanded,
+            onToggle: () =>
+                _setSubSectionExpanded(sectionKey, subKey, !expanded),
+            children: expanded ? tiles : const [],
+          ),
+        );
+        continue;
+      }
+      result.addAll(tiles);
     }
     return result;
   }

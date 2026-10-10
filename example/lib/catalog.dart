@@ -28,6 +28,8 @@ const exampleTranslations = <String, Map<String, String>>{
     'font_size': 'Font size',
     'card_elevation': 'Card elevation',
     'auto_lock': 'Auto-lock',
+    'advanced': 'Advanced',
+    'animation_speed': 'Animation duration',
     'auto_lock_subtitle': 'Idle minutes before lock',
     'quiet_hours': 'Quiet hours',
     'quiet_hours_subtitle': 'Silence notifications at night',
@@ -200,6 +202,8 @@ const exampleTranslations = <String, Map<String, String>>{
     'font_size': 'حجم الخط',
     'card_elevation': 'ارتفاع البطاقة',
     'auto_lock': 'القفل التلقائي',
+    'advanced': 'متقدم',
+    'animation_speed': 'مدة الحركة',
     'auto_lock_subtitle': 'دقائق الخمول قبل القفل',
     'quiet_hours': 'ساعات الهدوء',
     'quiet_hours_subtitle': 'كتم الإشعارات ليلاً',
@@ -522,6 +526,23 @@ const cardElevationSetting = DoubleSetting(
   },
 );
 
+const animationSpeedSetting = IntSetting(
+  'animation_speed',
+  defaultValue: 150,
+  min: 0,
+  max: 1000,
+  step: 50,
+  titleKey: 'animation_speed',
+  icon: Icons.speed,
+  section: 'behavior',
+  subSection: 'advanced',
+  order: 0,
+  searchTerms: {
+    'en': ['animation', 'duration', 'motion'],
+    'ar': ['حركة', 'مدة'],
+  },
+);
+
 const autoLockSetting = IntSetting(
   'auto_lock_minutes',
   defaultValue: 5,
@@ -655,6 +676,7 @@ SettingsRegistry createExampleRegistry() {
       fontSizeScaleSetting,
       cardElevationSetting,
       autoLockSetting,
+      animationSpeedSetting,
       quietHoursSetting,
       quietHoursStartSetting,
       exportSetting,

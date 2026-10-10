@@ -307,6 +307,7 @@ class _ExampleSettingsPageState extends ConsumerState<ExampleSettingsPage> {
         isMobile || !showPageIndexRail,
       ),
       sectionTitleBuilder: t,
+      subSectionTitleBuilder: t,
       enumLabelBuilder: t,
       emptySearchMessageBuilder: (query) =>
           t('empty_search').replaceAll('{query}', query),

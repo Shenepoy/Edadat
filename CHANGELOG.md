@@ -11,10 +11,23 @@ See [VERSIONING.md](VERSIONING.md).
 ## [Unreleased]
 
 ### Changed
+
 - Align CI and version checks with Safaeh: require a CHANGELOG heading for
   the current pubspec version, exclude `example/` from the package analyzer,
   and drop the per-push publish dry-run (Release still dry-runs before
   pub.dev).
+
+## [0.10.0] - 2026-10-10
+
+### Added
+
+- `SettingsCollapsibleSubsection` starts closed, turns its chevron over
+  200 ms, and grows downward so rows above the header stay put.
+- Search opens the subsection that owns the result before scrolling to it.
+
+### Changed
+
+- Depend on Safaeh **^0.9.0**.
 
 ## [0.9.0] - 2026-09-18
 

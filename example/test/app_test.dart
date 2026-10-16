@@ -339,7 +339,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(SafaehTextInputSheet), findsOneWidget);
     expect(find.text('تأكيد'), findsOneWidget);
-    await tester.tap(find.text('إلغاء'));
+    await tester.tapAt(const Offset(4, 4));
     await tester.pumpAndSettle();
     expect(find.byType(SafaehTextInputSheet), findsNothing);
   });
@@ -354,7 +354,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(SafaehConfirmSheet), findsOneWidget);
     expect(find.text('Restore every setting'), findsWidgets);
-    await tester.tap(find.text('Cancel'));
+    await tester.tapAt(const Offset(4, 4));
     await tester.pumpAndSettle();
     expect(find.byType(SafaehConfirmSheet), findsNothing);
   });

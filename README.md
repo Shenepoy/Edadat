@@ -121,7 +121,7 @@ Rendered from the [`example/`](example/) catalog (`flutter test test/screenshots
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.9.0
+  flutter_settings_framework: ^0.11.0
 ```
 
 Or:
@@ -137,14 +137,14 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.9.0
+      ref: v0.11.0
 ```
 
 ```dart
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 ```
 
-Current version: **0.9.0**.
+Current version: **0.11.0**.
 
 ### Optional Safaeh chrome
 
@@ -457,3 +457,16 @@ See [VERSIONING.md](VERSIONING.md) and [CHANGELOG.md](CHANGELOG.md). Tags are `v
 ## License
 
 [MPL-2.0](LICENSE) — weak copyleft, commercial use allowed. Modified package files stay under MPL; your app can remain closed-source.
+
+## Coordinating section navigation
+
+`SettingsSectionList` lays out a bounded settings catalog together, making
+all section anchors measurable before scrolling. Give it a
+`SettingsSectionNavigation` to let manual drags cancel pending requests.
+
+After expanding a section, call `navigation.layoutChanged()`, then
+`navigation.navigate(() => scrollToTarget())`. New requests supersede older
+pending ones. While `navigation.isNavigating` is true, keep the selected
+page-index title stable. Use `onSettled` to resume your scroll spy and dispose
+the coordinator with the page. A custom expansion duration can be passed to
+`layoutChanged` (the default accommodates Edadat's 200ms animation).

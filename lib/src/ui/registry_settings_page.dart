@@ -18,6 +18,7 @@ import 'responsive_helpers.dart';
 import 'l10n.dart';
 import 'setting_scroll_target.dart';
 import 'settings_section.dart';
+import 'section_navigation.dart';
 import 'settings_tile.dart';
 
 /// Convention-based settings page that builds UI from a [SettingsRegistry].
@@ -64,18 +65,18 @@ class RegistrySettingsPage extends ConsumerStatefulWidget {
   /// [defaultChildren]. If section has no registry settings, [defaultChildren]
   /// is empty and you can return full custom content.
   final List<Widget> Function(String sectionKey, List<Widget> defaultChildren)?
-      sectionContentBuilder;
+  sectionContentBuilder;
 
   /// Optional: override or wrap the default tile for a setting.
   final Widget? Function(SettingDefinition setting, Widget defaultTile)?
-      tileBuilder;
+  tileBuilder;
 
   /// Optional: section expansion state (when null, uses in-memory state).
   final bool Function(String sectionId)? isSectionExpanded;
 
   /// Optional: persist section expansion changes.
   final void Function(String sectionId, bool expanded)?
-      onSectionExpansionChanged;
+  onSectionExpansionChanged;
 
   /// Optional: filter search results before display (e.g. hide platform sections).
   final bool Function(SearchResult result)? searchResultFilter;
@@ -159,6 +160,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   final Map<String, bool> _subSectionExpanded = {};
   String? _selectedSectionId;
   String? _pendingScrollKey;
+  final _sectionNavigation = SettingsSectionNavigation();
 
   /// Select a result from an external search surface.
   ///
@@ -180,6 +182,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     _searchController.dispose();
     _searchFocusNode.dispose();
     _scrollController.dispose();
+    _sectionNavigation.dispose();
     _anchors.dispose();
     super.dispose();
   }
@@ -209,6 +212,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   }
 
   void _onSectionExpansionChanged(String sectionId, bool expanded) {
+    _sectionNavigation.layoutChanged();
     widget.onSectionExpansionChanged?.call(sectionId, expanded);
     if (widget.onSectionExpansionChanged == null) {
       setState(() => _sectionExpanded[sectionId] = expanded);
@@ -224,14 +228,16 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
   void _setSubSectionExpanded(String sectionKey, String subKey, bool expanded) {
     final id = _subSectionId(sectionKey, subKey);
     if (_subSectionExpanded[id] == expanded) return;
+    _sectionNavigation.layoutChanged();
     setState(() => _subSectionExpanded[id] = expanded);
   }
 
   Future<void> _onResultSelected(SearchResult result) async {
     final setting = result.setting;
     final sectionKey = setting.section;
-    final section =
-        sectionKey != null ? widget.registry.getSection(sectionKey) : null;
+    final section = sectionKey != null
+        ? widget.registry.getSection(sectionKey)
+        : null;
     final useSplit = _useSplitLayout(context);
 
     setState(() {
@@ -268,27 +274,12 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     String settingKey, {
     required bool waitForExpand,
   }) async {
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted || _pendingScrollKey != settingKey) return;
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted || _pendingScrollKey != settingKey) return;
-
-    if (waitForExpand) {
-      await Future<void>.delayed(const Duration(milliseconds: 220));
+    if (waitForExpand) _sectionNavigation.layoutChanged();
+    await _sectionNavigation.navigate(() async {
       if (!mounted || _pendingScrollKey != settingKey) return;
-    }
-
-    if (_anchors.keyFor(settingKey).currentContext == null) {
-      await Future<void>.delayed(const Duration(milliseconds: 220));
-      if (!mounted || _pendingScrollKey != settingKey) return;
-    }
-
-    // Do not pass the left-list controller: in split mode the tile lives in
-    // the detail pane, and [Scrollable.ensureVisible] finds that scrollable.
-    await _anchors.scrollTo(settingKey);
-    if (_pendingScrollKey == settingKey) {
-      _pendingScrollKey = null;
-    }
+      await _anchors.scrollTo(settingKey);
+      if (_pendingScrollKey == settingKey) _pendingScrollKey = null;
+    });
   }
 
   @override
@@ -314,7 +305,8 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     if (hasSearch && filteredSearch.isEmpty) {
       listPane = EmptySearchResults(
         query: _searchQuery,
-        message: widget.emptySearchMessageBuilder?.call(_searchQuery) ??
+        message:
+            widget.emptySearchMessageBuilder?.call(_searchQuery) ??
             settingsEmptySearchFallback(
               _searchQuery,
               Directionality.of(context),
@@ -327,11 +319,18 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
       );
     } else {
       listPane = withScrollViewKey(
-        ListView(
-          key: const ValueKey('settings_list'),
-          controller: widget.scrollController ?? _scrollController,
-          children: _buildSections(settings, registry, isSplit),
-        ),
+        isSplit
+            ? ListView(
+                key: const ValueKey('settings_list'),
+                controller: widget.scrollController ?? _scrollController,
+                children: _buildSections(settings, registry, isSplit),
+              )
+            : SettingsSectionList(
+                scrollViewKey: const ValueKey('settings_list'),
+                controller: widget.scrollController ?? _scrollController,
+                navigation: _sectionNavigation,
+                children: _buildSections(settings, registry, isSplit),
+              ),
       );
     }
 
@@ -380,10 +379,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: widget.actions,
-      ),
+      appBar: AppBar(title: Text(widget.title), actions: widget.actions),
       body: widget.bodyOverlay == null
           ? body
           : Stack(
@@ -436,10 +432,7 @@ class RegistrySettingsPageState extends ConsumerState<RegistrySettingsPage> {
     return result;
   }
 
-  List<Widget> _sectionChildren(
-    SettingsProviders settings,
-    String sectionKey,
-  ) {
+  List<Widget> _sectionChildren(SettingsProviders settings, String sectionKey) {
     final registry = widget.registry;
     final bySub = registry.getSettingsGroupedBySubSection(sectionKey);
     final result = <Widget>[];

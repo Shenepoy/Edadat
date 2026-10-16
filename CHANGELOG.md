@@ -10,6 +10,21 @@ See [VERSIONING.md](VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-16
+
+### Added
+
+- `SettingsSectionNavigation` coordinates expansion, latest-request wins,
+  cancellation, and scroll-spy suppression for section navigation.
+- `SettingsSectionList` keeps bounded catalog anchors measurable so page-index
+  navigation can animate directly to distant sections.
+
+### Changed
+
+- Registry pages use coordinated navigation and measurable stacked sections.
+- Depend on Safaeh ^0.12.0.
+
+
 ### Changed
 
 - Align CI and version checks with Safaeh: require a CHANGELOG heading for

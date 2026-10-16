@@ -62,3 +62,5 @@ export 'src/ui/profile/profile_security_tile.dart';
 
 // Localization
 export 'src/localization/easy_localization_adapter.dart';
+
+export 'src/ui/section_navigation.dart';

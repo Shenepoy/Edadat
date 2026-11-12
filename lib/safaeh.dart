@@ -10,5 +10,6 @@
 library;
 
 export 'package:safaeh/safaeh.dart';
+
 export 'src/ui/safaeh_page_index.dart';
 export 'src/ui/safaeh_search.dart';

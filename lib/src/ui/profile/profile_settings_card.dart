@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Trailing icon action for [ProfileSettingsCard].
 class ProfileSettingsAction {
@@ -61,54 +61,51 @@ class ProfileSettingsCard extends StatelessWidget {
                     child: Semantics(
                       button: onTap != null,
                       child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(
-                        12,
-                        12,
-                        10,
-                        12,
-                      ),
-                      child: Row(
-                        children: [
-                          leading,
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DefaultTextStyle.merge(
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  child: title,
-                                ),
-                                if (subtitle != null) ...[
-                                  const SizedBox(height: 2),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                          12,
+                          12,
+                          10,
+                          12,
+                        ),
+                        child: Row(
+                          children: [
+                            leading,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
                                   DefaultTextStyle.merge(
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: cs.onSurfaceVariant,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w600),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    child: subtitle!,
+                                    child: title,
                                   ),
+                                  if (subtitle != null) ...[
+                                    const SizedBox(height: 2),
+                                    DefaultTextStyle.merge(
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: cs.onSurfaceVariant,
+                                          ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      child: subtitle!,
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                     ),
                   ),
                 ),
                 for (final action in actions)
-                  _ProfileSettingsActionButton(
-                    action: action,
-                    colorScheme: cs,
-                  ),
+                  _ProfileSettingsActionButton(action: action, colorScheme: cs),
               ],
             ),
           ),
@@ -139,14 +136,14 @@ class _ProfileSettingsActionButton extends StatelessWidget {
             button: true,
             label: action.tooltip,
             child: SizedBox(
-            width: 48,
-            child: Center(
-              child: Icon(
-                action.icon,
-                size: 20,
-                color: colorScheme.onSurfaceVariant,
+              width: 48,
+              child: Center(
+                child: Icon(
+                  action.icon,
+                  size: 20,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
             ),
           ),
         ),

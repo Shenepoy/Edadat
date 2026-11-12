@@ -5,13 +5,12 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.0
-  flutter: ">=3.11.0"
+  sdk: ^3.14.0
+  flutter: ">=3.50.0"
 
 dependencies:
+  material_ui: ^1.11.0
   flutter:
-    sdk: flutter
-  flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^3.4.2
   flutter_settings_framework:

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Label + value row with a trailing copy action. Host owns clipboard.
 class ProfileCopyRow extends StatelessWidget {

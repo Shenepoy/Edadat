@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Plan / membership summary panel.
 class ProfilePlanCard extends StatelessWidget {
@@ -39,9 +39,7 @@ class ProfilePlanCard extends StatelessWidget {
           if (status != null) ...[
             const SizedBox(height: 6),
             DefaultTextStyle.merge(
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: cs.primary,
-              ),
+              style: theme.textTheme.titleSmall?.copyWith(color: cs.primary),
               child: status!,
             ),
           ],
@@ -54,10 +52,7 @@ class ProfilePlanCard extends StatelessWidget {
               child: footnote!,
             ),
           ],
-          if (action != null) ...[
-            const SizedBox(height: 12),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 12), action!],
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
@@ -17,10 +17,7 @@ Future<void> pumpExampleApp(
   String themeMode = 'light',
 }) async {
   final storage = MemoryStorage();
-  storage.setAll({
-    'language': language,
-    'theme_mode': themeMode,
-  });
+  storage.setAll({'language': language, 'theme_mode': themeMode});
   final settings = await bootExampleSettings(storage: storage);
 
   tester.view.physicalSize = Size(

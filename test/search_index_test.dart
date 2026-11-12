@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -114,8 +114,10 @@ void main() {
 
     final arTheme = index.search('داكن');
     expect(arTheme.map((r) => r.setting.key), contains('theme_mode'));
-    expect(arTheme.firstWhere((r) => r.setting.key == 'theme_mode').matchedLocale,
-        'ar');
+    expect(
+      arTheme.firstWhere((r) => r.setting.key == 'theme_mode').matchedLocale,
+      'ar',
+    );
 
     final enTheme = index.search('theme');
     expect(enTheme.map((r) => r.setting.key), contains('theme_mode'));
@@ -225,7 +227,10 @@ void main() {
     );
     await index.build();
 
-    expect(index.search('thme').map((r) => r.setting.key), contains('theme_mode'));
+    expect(
+      index.search('thme').map((r) => r.setting.key),
+      contains('theme_mode'),
+    );
     expect(index.search('xyzq'), isEmpty);
   });
 }

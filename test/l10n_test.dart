@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,7 +8,9 @@ void main() {
     expect(Icons.chevron_left.matchTextDirection, isTrue);
   });
 
-  testWidgets('settingsChevronEnd keeps the LTR glyph in Arabic', (tester) async {
+  testWidgets('settingsChevronEnd keeps the LTR glyph in Arabic', (
+    tester,
+  ) async {
     IconData? ltr;
     IconData? rtl;
 

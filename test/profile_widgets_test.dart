@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -139,9 +139,8 @@ void main() {
     final bar = tester.widget<LinearProgressIndicator>(
       find.byType(LinearProgressIndicator),
     );
-    final scheme = Theme.of(
-      tester.element(find.byType(ProfileBudgetCard)),
-    ).colorScheme;
+    final scheme = Theme.of(tester.element(find.byType(ProfileBudgetCard)))
+        .colorScheme;
     expect(bar.color, scheme.error);
     expect(bar.value, 1);
   });
@@ -160,9 +159,8 @@ void main() {
       ),
     );
 
-    final style = DefaultTextStyle.of(
-      tester.element(find.text('New sign-in')),
-    ).style;
+    final style = DefaultTextStyle.of(tester.element(find.text('New sign-in')))
+        .style;
     expect(style.fontWeight, FontWeight.w700);
 
     await tester.tap(find.text('New sign-in'));
@@ -222,9 +220,8 @@ void main() {
         matching: find.byType(Container),
       ),
     );
-    final scheme = Theme.of(
-      tester.element(find.byType(ProfileStatusBanner)),
-    ).colorScheme;
+    final scheme = Theme.of(tester.element(find.byType(ProfileStatusBanner)))
+        .colorScheme;
     final decoration = banner.decoration! as BoxDecoration;
     expect(decoration.border, isA<Border>());
     expect((decoration.border! as Border).top.color.a, greaterThan(0));
@@ -272,7 +269,9 @@ void main() {
     expect(find.byType(Chip), findsOneWidget);
   });
 
-  testWidgets('ProfileLinkedAccountTile shows connected status', (tester) async {
+  testWidgets('ProfileLinkedAccountTile shows connected status', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _wrap(
         const ProfileLinkedAccountTile(
@@ -299,7 +298,11 @@ void main() {
     );
     final theme = Theme.of(tester.element(find.byType(ProfileActionTile)));
     final icon = tester.widget<Icon>(find.byIcon(Icons.logout));
-    expect(icon.color ?? IconTheme.of(tester.element(find.byIcon(Icons.logout))).color, theme.colorScheme.error);
+    expect(
+      icon.color ??
+          IconTheme.of(tester.element(find.byIcon(Icons.logout))).color,
+      theme.colorScheme.error,
+    );
     await tester.tap(find.text('Sign out'));
     expect(signedOut, isTrue);
   });

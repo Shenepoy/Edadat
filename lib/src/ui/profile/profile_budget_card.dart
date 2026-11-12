@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Visual treatment for a budget that is on track, near, or over the limit.
 enum ProfileBudgetAttention { none, near, over }
@@ -47,48 +47,48 @@ class ProfileBudgetCard extends StatelessWidget {
       container: true,
       value: showProgress ? '${(clamped * 100).round()}%' : null,
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) ...[
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null) ...[
+            DefaultTextStyle.merge(
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+              child: title!,
+            ),
+            const SizedBox(height: 8),
+          ],
           DefaultTextStyle.merge(
-            style: theme.textTheme.titleSmall?.copyWith(
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: cs.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+            child: caption,
+          ),
+          const SizedBox(height: 6),
+          DefaultTextStyle.merge(
+            style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
+              letterSpacing: -0.3,
+              color: attentionColor ?? cs.onSurface,
             ),
-            child: title!,
+            child: limit,
           ),
-          const SizedBox(height: 8),
-        ],
-        DefaultTextStyle.merge(
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: cs.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
-          child: caption,
-        ),
-        const SizedBox(height: 6),
-        DefaultTextStyle.merge(
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
-            color: attentionColor ?? cs.onSurface,
-          ),
-          child: limit,
-        ),
-        const SizedBox(height: 10),
-        spent,
-        if (showProgress) ...[
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: clamped > 1 ? 1 : clamped,
-              minHeight: 7,
-              backgroundColor: cs.surface.withValues(alpha: 0.7),
-              color: barColor,
+          const SizedBox(height: 10),
+          spent,
+          if (showProgress) ...[
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: clamped > 1 ? 1 : clamped,
+                minHeight: 7,
+                backgroundColor: cs.surface.withValues(alpha: 0.7),
+                color: barColor,
+              ),
             ),
-          ),
+          ],
         ],
-      ],
       ),
     );
   }

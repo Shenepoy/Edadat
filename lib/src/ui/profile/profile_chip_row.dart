@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// One chip in [ProfileChipRow].
 class ProfileChip {
-  const ProfileChip({
-    required this.label,
-    this.selected = false,
-    this.onTap,
-  });
+  const ProfileChip({required this.label, this.selected = false, this.onTap});
 
   final Widget label;
   final bool selected;
@@ -15,10 +11,7 @@ class ProfileChip {
 
 /// Horizontal wrap of selectable status / filter chips.
 class ProfileChipRow extends StatelessWidget {
-  const ProfileChipRow({
-    super.key,
-    required this.chips,
-  });
+  const ProfileChipRow({super.key, required this.chips});
 
   final List<ProfileChip> chips;
 

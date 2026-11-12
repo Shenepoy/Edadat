@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../l10n.dart';
 
@@ -49,57 +49,57 @@ class ProfileHeroMetric extends StatelessWidget {
       container: true,
       label: announced,
       child: Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: 0.55),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExcludeSemantics(
-            child: Text(
-              caption,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: cs.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          if (status != null) ...[
-            const SizedBox(height: 6),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             ExcludeSemantics(
               child: Text(
-                status!,
-                style: theme.textTheme.titleSmall?.copyWith(color: color),
-              ),
-            ),
-          ],
-          const SizedBox(height: 4),
-          ExcludeSemantics(
-            child: SettingsLtr(
-              child: Text(
-                value,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: color,
-                ),
-              ),
-            ),
-          ),
-          if (footnote != null) ...[
-            const SizedBox(height: 8),
-            ExcludeSemantics(
-              child: Text(
-                footnote!,
-                style: theme.textTheme.bodySmall?.copyWith(
+                caption,
+                style: theme.textTheme.labelLarge?.copyWith(
                   color: cs.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
+            if (status != null) ...[
+              const SizedBox(height: 6),
+              ExcludeSemantics(
+                child: Text(
+                  status!,
+                  style: theme.textTheme.titleSmall?.copyWith(color: color),
+                ),
+              ),
+            ],
+            const SizedBox(height: 4),
+            ExcludeSemantics(
+              child: SettingsLtr(
+                child: Text(
+                  value,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: color,
+                  ),
+                ),
+              ),
+            ),
+            if (footnote != null) ...[
+              const SizedBox(height: 8),
+              ExcludeSemantics(
+                child: Text(
+                  footnote!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
           ],
-        ],
-      ),
+        ),
       ),
     );
   }

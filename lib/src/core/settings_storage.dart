@@ -172,4 +172,3 @@ class MemoryStorage implements SettingsStorage {
   /// Get all data (for testing/debugging).
   Map<String, Object> getAll() => Map.unmodifiable(_data);
 }
-

@@ -6,6 +6,7 @@
 library;
 
 import 'package:flutter/widgets.dart';
+
 import 'setting_definition.dart';
 import 'settings_registry.dart';
 
@@ -92,10 +93,7 @@ class SearchIndex {
   bool _built = false;
 
   /// Create a new search index.
-  SearchIndex({
-    required this.registry,
-    this.localizationProvider,
-  });
+  SearchIndex({required this.registry, this.localizationProvider});
 
   /// Whether the index has been built.
   bool get isBuilt => _built;
@@ -244,12 +242,14 @@ class SearchIndex {
     for (final entry in scores.entries) {
       final setting = registry.get(entry.key);
       if (setting != null && setting.visible) {
-        results.add(SearchResult(
-          setting: setting,
-          score: entry.value.totalScore,
-          matchedTerm: entry.value.bestMatch,
-          matchedLocale: entry.value.bestMatchLocale,
-        ));
+        results.add(
+          SearchResult(
+            setting: setting,
+            score: entry.value.totalScore,
+            matchedTerm: entry.value.bestMatch,
+            matchedLocale: entry.value.bestMatchLocale,
+          ),
+        );
       }
     }
 
@@ -354,15 +354,14 @@ class SearchIndex {
 
   /// Get statistics about the index.
   Map<String, int> get stats => {
-        'totalTerms': _termToKeys.length,
-        'totalSettings': _keyToTerms.length,
-        'avgTermsPerSetting': _keyToTerms.isEmpty
-            ? 0
-            : (_termToKeys.values.fold<int>(
-                        0, (sum, set) => sum + set.length) /
-                    _keyToTerms.length)
-                .round(),
-      };
+    'totalTerms': _termToKeys.length,
+    'totalSettings': _keyToTerms.length,
+    'avgTermsPerSetting': _keyToTerms.isEmpty
+        ? 0
+        : (_termToKeys.values.fold<int>(0, (sum, set) => sum + set.length) /
+                  _keyToTerms.length)
+              .round(),
+  };
 
   /// Clear the index.
   void clear() {
@@ -425,7 +424,8 @@ class _ScoreAccumulator {
 ///
 /// Kept for backward compatibility.
 @Deprecated(
-    'Use EasyLocalizationAdapterImpl for real easy_localization integration')
+  'Use EasyLocalizationAdapterImpl for real easy_localization integration',
+)
 class EasyLocalizationAdapter implements LocalizationProvider {
   final List<Locale> _supportedLocales;
 

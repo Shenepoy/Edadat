@@ -10,6 +10,16 @@ See [VERSIONING.md](VERSIONING.md).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-12
+
+### Breaking changes
+
+- Migrate widgets and public UI types to `package:material_ui`. Consumers must
+  migrate their Material imports and theme types together with this upgrade.
+- Require Flutter 3.50.0 / Dart 3.14.0. Update CI, examples, widget tests, and
+  localization delegates for the standalone UI packages.
+- Depend on Safaeh ^1.0.0, which exposes the same standalone Material types.
+
 ## [0.11.0] - 2026-10-16
 
 ### Added

@@ -7,6 +7,7 @@ library;
 
 import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 import '../core/search_index.dart';
 
 /// Localization provider that integrates with easy_localization.
@@ -121,4 +122,3 @@ class PreIndexedLocalizationProvider implements LocalizationProvider {
   Map<String, String>? getTranslations(String localeCode) =>
       _translations[localeCode];
 }
-

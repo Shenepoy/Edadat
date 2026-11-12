@@ -5,8 +5,9 @@
 /// types of settings (switches, selectors, sliders, colors, etc.).
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+
 import '../core/setting_definition.dart';
 import 'l10n.dart';
 import 'responsive_helpers.dart';
@@ -64,8 +65,7 @@ class _AnimatedSettingValueState extends State<AnimatedSettingValue>
     if (widget.value != _previousValue) {
       _previousValue = widget.value;
       _controller.forward(from: 0);
-      if (widget.hapticFeedback &&
-          !MediaQuery.disableAnimationsOf(context)) {
+      if (widget.hapticFeedback && !MediaQuery.disableAnimationsOf(context)) {
         HapticFeedback.selectionClick();
       }
     }
@@ -367,8 +367,7 @@ class SelectSettingsTile<T> extends StatelessWidget {
   Future<void> _showDialog(BuildContext context) async {
     final result = await SettingsDialog.select<T>(
       context: context,
-      title: dialogTitle ??
-          (title is Text ? (title as Text).data ?? '' : ''),
+      title: dialogTitle ?? (title is Text ? (title as Text).data ?? '' : ''),
       options: options,
       itemBuilder: itemBuilder,
       selectedValue: value,
@@ -663,8 +662,7 @@ class EnumSettingsTile extends StatelessWidget {
   Future<void> _showDialog(BuildContext context) async {
     final result = await SettingsDialog.select<String>(
       context: context,
-      title: dialogTitle ??
-          (title is Text ? (title as Text).data ?? '' : ''),
+      title: dialogTitle ?? (title is Text ? (title as Text).data ?? '' : ''),
       options: options,
       itemBuilder: (opt) => Text(labelBuilder(opt)),
       selectedValue: value,
@@ -834,8 +832,7 @@ class SliderSettingsTile extends StatelessWidget {
   Future<void> _showDialog(BuildContext context) async {
     final result = await SettingsDialog.slider(
       context: context,
-      title: dialogTitle ??
-          (title is Text ? (title as Text).data ?? '' : ''),
+      title: dialogTitle ?? (title is Text ? (title as Text).data ?? '' : ''),
       value: value,
       min: min,
       max: max,
@@ -929,7 +926,10 @@ class ColorSettingsTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          settingsChevronEnd(context, color: theme.colorScheme.onSurfaceVariant),
+          settingsChevronEnd(
+            context,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ],
       ),
       onTap: enabled ? () => _showDialog(context) : null,
@@ -940,8 +940,7 @@ class ColorSettingsTile extends StatelessWidget {
   Future<void> _showDialog(BuildContext context) async {
     final result = await SettingsDialog.colorPicker(
       context: context,
-      title: dialogTitle ??
-          (title is Text ? (title as Text).data ?? '' : ''),
+      title: dialogTitle ?? (title is Text ? (title as Text).data ?? '' : ''),
       currentColor: value,
       colors: colors,
       allowCustom: allowCustom,
@@ -1084,16 +1083,16 @@ class InfoSettingsTile extends StatelessWidget {
       trailing: value,
       onTap: copyable
           ? () async {
-              final text = copyValue ??
-                  (value is Text ? (value as Text).data : null);
+              final text =
+                  copyValue ?? (value is Text ? (value as Text).data : null);
               if (text == null || text.isEmpty) return;
               await Clipboard.setData(ClipboardData(text: text));
               if (!context.mounted) return;
-              final message = copiedMessage ??
+              final message =
+                  copiedMessage ??
                   MaterialLocalizations.of(context).copyButtonLabel;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message)),
-              );
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(message)));
             }
           : null,
     );
@@ -1356,8 +1355,7 @@ class IntSettingsTile extends StatelessWidget {
   Future<void> _showDialog(BuildContext context) async {
     final result = await SettingsDialog.slider(
       context: context,
-      title: dialogTitle ??
-          (title is Text ? (title as Text).data ?? '' : ''),
+      title: dialogTitle ?? (title is Text ? (title as Text).data ?? '' : ''),
       value: value.toDouble(),
       min: min.toDouble(),
       max: max.toDouble(),

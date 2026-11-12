@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Device / session row. Host supplies the current-device [badge].
 class ProfileSessionTile extends StatelessWidget {
@@ -30,7 +30,8 @@ class ProfileSessionTile extends StatelessWidget {
       leading: leading,
       title: title,
       subtitle: subtitle,
-      trailing: trailing ??
+      trailing:
+          trailing ??
           (current && badge != null
               ? Chip(
                   label: badge!,

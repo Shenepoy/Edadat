@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Single notification row. [title] / [subtitle] are host widgets so
 /// user-generated copy can keep its own text direction.

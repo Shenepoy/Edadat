@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Profile action row. [destructive] uses the error color.
 class ProfileActionTile extends StatelessWidget {

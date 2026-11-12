@@ -5,7 +5,8 @@
 /// into collapsible sections with search filtering.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../core/setting_definition.dart';
 import '../core/search_index.dart';
 import 'l10n.dart';
@@ -78,9 +79,8 @@ class SettingsSectionWidget extends StatelessWidget {
       leading: icon != null ? Icon(icon) : null,
       title: Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        style: Theme.of(context).textTheme.titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
       initiallyExpanded: isExpanded ?? initiallyExpanded,
       onExpansionChanged: onExpansionChanged,
@@ -97,11 +97,7 @@ class SettingsSubsectionHeader extends StatelessWidget {
   /// Sub-section icon.
   final IconData? icon;
 
-  const SettingsSubsectionHeader({
-    super.key,
-    required this.title,
-    this.icon,
-  });
+  const SettingsSubsectionHeader({super.key, required this.title, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +273,8 @@ class _SettingsSearchBarState extends State<SettingsSearchBar> {
     _controller =
         widget.controller ?? TextEditingController(text: widget.initialQuery);
     _focusNode = widget.focusNode ?? FocusNode();
-    _isExpanded = widget.isExpanded || widget.mode == SettingsSearchBarMode.persistent;
+    _isExpanded =
+        widget.isExpanded || widget.mode == SettingsSearchBarMode.persistent;
 
     _focusNode.addListener(_onFocusChanged);
     _controller.addListener(_onTextChanged);
@@ -358,10 +355,7 @@ class _SettingsSearchBarState extends State<SettingsSearchBar> {
         borderRadius: BorderRadius.all(Radius.circular(24)),
       ),
       isDense: true,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 12,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     );
   }
 
@@ -474,9 +468,7 @@ class _SettingsPageScaffoldState extends State<SettingsPageScaffold> {
           ...?widget.actions,
         ],
       ),
-      body: ListView(
-        children: widget.sections,
-      ),
+      body: ListView(children: widget.sections),
     );
   }
 }
@@ -549,8 +541,9 @@ List<Widget> buildSearchResultWidgets(
   // Build widgets
   final widgets = <Widget>[];
   for (final entry in grouped.entries) {
-    final sectionLabel =
-        entry.key.isNotEmpty ? sectionTitleBuilder(entry.key) : '';
+    final sectionLabel = entry.key.isNotEmpty
+        ? sectionTitleBuilder(entry.key)
+        : '';
     if (entry.key.isNotEmpty) {
       widgets.add(
         Builder(
@@ -560,9 +553,9 @@ List<Widget> buildSearchResultWidgets(
               child: Text(
                 sectionLabel,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             );
           },
@@ -576,8 +569,8 @@ List<Widget> buildSearchResultWidgets(
         continue;
       }
 
-      final title = settingTitleBuilder?.call(result.setting) ??
-          result.setting.titleKey;
+      final title =
+          settingTitleBuilder?.call(result.setting) ?? result.setting.titleKey;
       widgets.add(
         Builder(
           builder: (context) {
@@ -722,48 +715,54 @@ class CardSettingsSection extends StatelessWidget {
               selected: isLandscape ? isSelected : null,
               label: title,
               child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.colorScheme.primary.withValues(alpha: 0.2)
-                          : theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      icon,
-                      color: theme.colorScheme.primary,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isSelected ? theme.colorScheme.primary : null,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? theme.colorScheme.primary.withValues(alpha: 0.2)
+                            : theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ),
-                  ),
-                  if (!isLandscape)
-                    AnimatedRotation(
-                      turns: isExpanded ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 200),
                       child: Icon(
-                        Icons.expand_more,
-                        color: theme.colorScheme.onSurfaceVariant,
+                        icon,
+                        color: theme.colorScheme.primary,
+                        size: 20,
                       ),
                     ),
-                  if (isLandscape && isSelected)
-                    settingsChevronEnd(context, color: theme.colorScheme.primary),
-                ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? theme.colorScheme.primary : null,
+                        ),
+                      ),
+                    ),
+                    if (!isLandscape)
+                      AnimatedRotation(
+                        turns: isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.expand_more,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    if (isLandscape && isSelected)
+                      settingsChevronEnd(
+                        context,
+                        color: theme.colorScheme.primary,
+                      ),
+                  ],
+                ),
               ),
-            ),
             ),
           ),
           // Only show expanded content in portrait mode
@@ -790,19 +789,13 @@ class EmptySearchResults extends StatelessWidget {
   /// Message to display.
   final String? message;
 
-  const EmptySearchResults({
-    super.key,
-    required this.query,
-    this.message,
-  });
+  const EmptySearchResults({super.key, required this.query, this.message});
 
   @override
   Widget build(BuildContext context) {
-    final copy = message ??
-        settingsEmptySearchFallback(
-          query,
-          Directionality.of(context),
-        );
+    final copy =
+        message ??
+        settingsEmptySearchFallback(query, Directionality.of(context));
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -817,9 +810,7 @@ class EmptySearchResults extends StatelessWidget {
                 child: Icon(
                   Icons.search_off,
                   size: 64,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.3),
                 ),
               ),
@@ -829,11 +820,9 @@ class EmptySearchResults extends StatelessWidget {
                   copy,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
-                      ),
+                    color: Theme.of(context).colorScheme.onSurface
+                        .withValues(alpha: 0.6),
+                  ),
                 ),
               ),
             ],
@@ -843,4 +832,3 @@ class EmptySearchResults extends StatelessWidget {
     );
   }
 }
-

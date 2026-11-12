@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Compact activity row. Not an unread notification style.
 class ProfileTimelineTile extends StatelessWidget {

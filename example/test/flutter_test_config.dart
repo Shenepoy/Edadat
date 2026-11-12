@@ -13,15 +13,15 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 Future<void> loadScreenshotFonts() async {
   final flutterRoot = Platform.environment['FLUTTER_ROOT'];
   if (flutterRoot != null) {
-    final fontsDir = Directory('$flutterRoot/bin/cache/artifacts/material_fonts');
+    final fontsDir = Directory(
+      '$flutterRoot/bin/cache/artifacts/material_fonts',
+    );
     await _loadFamily(fontsDir, 'Roboto', [
       'Roboto-Regular.ttf',
       'Roboto-Medium.ttf',
       'Roboto-Bold.ttf',
     ]);
-    await _loadFamily(fontsDir, 'MaterialIcons', [
-      'MaterialIcons-Regular.otf',
-    ]);
+    await _loadFamily(fontsDir, 'MaterialIcons', ['MaterialIcons-Regular.otf']);
   }
 
   final bazCandidates = [

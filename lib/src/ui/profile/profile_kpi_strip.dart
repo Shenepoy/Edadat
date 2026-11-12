@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../l10n.dart';
 
@@ -23,10 +23,7 @@ class ProfileKpiItem {
 /// Nested inside the settings [ListView], so this owns horizontal drags and
 /// wheel/trackpad scrolls instead of letting the parent page move.
 class ProfileKpiStrip extends StatefulWidget {
-  const ProfileKpiStrip({
-    super.key,
-    required this.items,
-  });
+  const ProfileKpiStrip({super.key, required this.items});
 
   final List<ProfileKpiItem> items;
 

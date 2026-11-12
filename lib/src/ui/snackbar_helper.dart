@@ -5,19 +5,14 @@
 /// and proper theming across the application.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+
 import 'l10n.dart';
 import 'responsive_helpers.dart';
 
 /// Snackbar type for different visual styles.
-enum SnackbarType {
-  success,
-  error,
-  warning,
-  info,
-  undo,
-}
+enum SnackbarType { success, error, warning, info, undo }
 
 /// Modern snackbar helper with Material Design 3 styling.
 class AppSnackbar {
@@ -147,21 +142,25 @@ class AppSnackbar {
     final displayIcon = icon ?? _getIconForType(type);
     // Ensure duration is always set - use explicit default if null
     final displayDuration = duration ?? _getDefaultDuration(type);
-    
+
     // Debug: Verify duration is set (can be removed in production)
-    assert(displayDuration.inMilliseconds > 0, 'Snackbar duration must be greater than 0');
+    assert(
+      displayDuration.inMilliseconds > 0,
+      'Snackbar duration must be greater than 0',
+    );
 
     // Calculate responsive margins
     final horizontalMargin = isPhone ? 16.0 : 24.0;
     final bottomMargin = isPhone ? 16.0 : 24.0;
     final maxWidth = isPhone ? null : 400.0;
-    
+
     // Get screen width for centering calculation
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // Calculate horizontal margin to center snackbar when it has maxWidth
     // This ensures swipe doesn't cut off mid-screen
-    final calculatedHorizontalMargin = maxWidth != null && screenWidth > maxWidth
+    final calculatedHorizontalMargin =
+        maxWidth != null && screenWidth > maxWidth
         ? (screenWidth - maxWidth) / 2
         : horizontalMargin;
 
@@ -179,9 +178,7 @@ class AppSnackbar {
       duration: displayDuration, // Explicitly set duration
       action: action,
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       // Always use margin for proper centering and swipe behavior
       margin: EdgeInsets.fromLTRB(
         calculatedHorizontalMargin,
@@ -198,11 +195,12 @@ class AppSnackbar {
     // Show snackbar and ensure it respects duration
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     scaffoldMessenger.showSnackBar(snackBar);
-    
+
     // On Linux, SnackBar sometimes doesn't auto-dismiss properly with actions
     // Schedule explicit dismissal as a fallback (only if still showing)
     // This ensures timeout works even if platform has issues
-    if (displayDuration.inMilliseconds > 0 && displayDuration.inMilliseconds < 86400000) {
+    if (displayDuration.inMilliseconds > 0 &&
+        displayDuration.inMilliseconds < 86400000) {
       // Only set fallback for reasonable durations (not zero, not infinite-like)
       Future.delayed(displayDuration + const Duration(milliseconds: 100), () {
         // Small delay to ensure we don't interfere with manual dismissal
@@ -218,10 +216,7 @@ class AppSnackbar {
   }
 
   /// Get colors for a snackbar type.
-  static _SnackbarColors _getColorsForType(
-    ThemeData theme,
-    SnackbarType type,
-  ) {
+  static _SnackbarColors _getColorsForType(ThemeData theme, SnackbarType type) {
     final colorScheme = theme.colorScheme;
 
     switch (type) {
@@ -353,38 +348,31 @@ class _AnimatedSnackbarContentState extends State<_AnimatedSnackbarContent>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     // Fade in
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     // Scale animation for bounce effect
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.8, end: 1.05).chain(
-          CurveTween(curve: Curves.easeOut),
-        ),
+        tween: Tween(
+          begin: 0.8,
+          end: 1.05,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.05, end: 1.0).chain(
-          CurveTween(curve: Curves.easeIn),
-        ),
+        tween: Tween(
+          begin: 1.05,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 50,
       ),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Start animation
     _controller.forward();
@@ -409,18 +397,12 @@ class _AnimatedSnackbarContentState extends State<_AnimatedSnackbarContent>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: content,
-        ),
+        child: ScaleTransition(scale: _scaleAnimation, child: content),
       ),
     );
 
     if (widget.maxWidth != null) {
-      return SizedBox(
-        width: widget.maxWidth,
-        child: animatedContent,
-      );
+      return SizedBox(width: widget.maxWidth, child: animatedContent);
     }
 
     return animatedContent;
@@ -445,11 +427,7 @@ class _SnackbarContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          icon,
-          color: iconColor,
-          size: 24,
-        ),
+        Icon(icon, color: iconColor, size: 24),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
@@ -466,4 +444,3 @@ class _SnackbarContent extends StatelessWidget {
     );
   }
 }
-

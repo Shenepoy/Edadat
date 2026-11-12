@@ -1,7 +1,7 @@
 /// Shared i18n / RTL helpers for settings chrome.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Isolates Latin codes, hex, versions, and numerals from ambient RTL.
 class SettingsLtr extends StatelessWidget {
@@ -11,10 +11,7 @@ class SettingsLtr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    );
+    return Directionality(textDirection: TextDirection.ltr, child: child);
   }
 }
 
@@ -23,17 +20,9 @@ class SettingsLtr extends StatelessWidget {
 /// Always uses the LTR glyph. [Icons.chevron_right] already sets
 /// [IconData.matchTextDirection], so [Icon] mirrors it in RTL. Picking
 /// [Icons.chevron_left] in Arabic would flip twice and point the wrong way.
-Icon settingsChevronEnd(
-  BuildContext context, {
-  Color? color,
-  double? size,
-}) {
+Icon settingsChevronEnd(BuildContext context, {Color? color, double? size}) {
   assert(debugCheckHasDirectionality(context));
-  return Icon(
-    Icons.chevron_right,
-    color: color,
-    size: size,
-  );
+  return Icon(Icons.chevron_right, color: color, size: size);
 }
 
 /// Section › title in LTR, section ‹ title in RTL.

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 
 /// Bilingual catalogs for titles, subtitles, enum labels, and search.

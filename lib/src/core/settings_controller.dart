@@ -6,13 +6,17 @@
 library;
 
 import 'dart:async';
+
 import 'setting_definition.dart';
 import 'settings_registry.dart';
 import 'settings_storage.dart';
 
 /// Callback type for setting change notifications.
-typedef SettingChangeCallback<T> =
-    void Function(SettingDefinition<T> setting, T oldValue, T newValue);
+typedef SettingChangeCallback<T> = void Function(
+  SettingDefinition<T> setting,
+  T oldValue,
+  T newValue,
+);
 
 /// Event emitted when a setting value changes.
 class SettingChangeEvent<T> {
@@ -421,35 +425,45 @@ class SettingsController {
     Object? newValue,
   ) {
     if (setting is SettingDefinition<String>) {
-      _globalChangeController.add(SettingChangeEvent<String>(
-        setting: setting,
-        oldValue: oldValue as String? ?? setting.defaultValue,
-        newValue: newValue as String? ?? setting.defaultValue,
-      ));
+      _globalChangeController.add(
+        SettingChangeEvent<String>(
+          setting: setting,
+          oldValue: oldValue as String? ?? setting.defaultValue,
+          newValue: newValue as String? ?? setting.defaultValue,
+        ),
+      );
     } else if (setting is SettingDefinition<int>) {
-      _globalChangeController.add(SettingChangeEvent<int>(
-        setting: setting,
-        oldValue: oldValue as int? ?? setting.defaultValue,
-        newValue: newValue as int? ?? setting.defaultValue,
-      ));
+      _globalChangeController.add(
+        SettingChangeEvent<int>(
+          setting: setting,
+          oldValue: oldValue as int? ?? setting.defaultValue,
+          newValue: newValue as int? ?? setting.defaultValue,
+        ),
+      );
     } else if (setting is SettingDefinition<double>) {
-      _globalChangeController.add(SettingChangeEvent<double>(
-        setting: setting,
-        oldValue: oldValue as double? ?? setting.defaultValue,
-        newValue: newValue as double? ?? setting.defaultValue,
-      ));
+      _globalChangeController.add(
+        SettingChangeEvent<double>(
+          setting: setting,
+          oldValue: oldValue as double? ?? setting.defaultValue,
+          newValue: newValue as double? ?? setting.defaultValue,
+        ),
+      );
     } else if (setting is SettingDefinition<bool>) {
-      _globalChangeController.add(SettingChangeEvent<bool>(
-        setting: setting,
-        oldValue: oldValue as bool? ?? setting.defaultValue,
-        newValue: newValue as bool? ?? setting.defaultValue,
-      ));
+      _globalChangeController.add(
+        SettingChangeEvent<bool>(
+          setting: setting,
+          oldValue: oldValue as bool? ?? setting.defaultValue,
+          newValue: newValue as bool? ?? setting.defaultValue,
+        ),
+      );
     } else if (setting is SettingDefinition<List<String>>) {
-      _globalChangeController.add(SettingChangeEvent<List<String>>(
-        setting: setting,
-        oldValue: oldValue as List<String>? ?? setting.defaultValue,
-        newValue: newValue as List<String>? ?? setting.defaultValue,
-      ));
+      _globalChangeController.add(
+        SettingChangeEvent<List<String>>(
+          setting: setting,
+          oldValue: oldValue as List<String>? ?? setting.defaultValue,
+          newValue: newValue as List<String>? ?? setting.defaultValue,
+        ),
+      );
     }
     // Other types will emit to the setting-specific stream only.
   }
@@ -576,4 +590,3 @@ class _UndoEntry {
     required this.timestamp,
   });
 }
-

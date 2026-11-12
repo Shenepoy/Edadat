@@ -22,7 +22,7 @@ Prefer **pub.dev**:
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.9.0
+  flutter_settings_framework: ^1.0.0
 ```
 
 Or pin a **git tag** (not `main` or a raw commit):
@@ -32,7 +32,7 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.9.0
+      ref: v1.0.0
 ```
 
 ## Release checklist

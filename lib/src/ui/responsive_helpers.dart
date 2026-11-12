@@ -5,7 +5,7 @@
 /// screen sizes and orientations.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import 'l10n.dart';
@@ -214,24 +214,24 @@ class SettingsDialog {
           button: true,
           selected: isSelected,
           child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 24,
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        color: theme.colorScheme.primary,
-                        size: 20,
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: itemBuilder(option)),
-            ],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 24,
+                  child: isSelected
+                      ? Icon(
+                          Icons.check,
+                          color: theme.colorScheme.primary,
+                          size: 20,
+                        )
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: itemBuilder(option)),
+              ],
+            ),
           ),
-        ),
         ),
       );
     }).toList();
@@ -322,7 +322,9 @@ class SettingsDialog {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                child: Text(
+                  MaterialLocalizations.of(context).cancelButtonLabel,
+                ),
               ),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(currentValue),
@@ -618,7 +620,9 @@ class _ColorPickerSheetState extends State<_ColorPickerSheet> {
                       ),
                     ),
                     onPressed: () => Navigator.of(context).pop(_selectedColor),
-                    child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    child: Text(
+                      MaterialLocalizations.of(context).okButtonLabel,
+                    ),
                   ),
                 ),
               ],
@@ -793,7 +797,6 @@ class _ColorPickerSheetState extends State<_ColorPickerSheet> {
   String _getColorHex(Color color) {
     return '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
   }
-
 }
 
 /// Color picker dialog for tablets/desktops.
@@ -993,50 +996,50 @@ class _ColorSwatch extends StatelessWidget {
       selected: isSelected,
       label: hex,
       child: GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-            width: isSelected ? 3.5 : 1.5,
-          ),
-          boxShadow: [
-            // Base shadow for depth
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isSelected ? 0.15 : 0.08),
-              blurRadius: isSelected ? 12 : 6,
-              spreadRadius: isSelected ? 1 : 0,
-              offset: Offset(0, isSelected ? 4 : 2),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+              width: isSelected ? 3.5 : 1.5,
             ),
-            // Colored glow when selected
-            if (isSelected)
+            boxShadow: [
+              // Base shadow for depth
               BoxShadow(
-                color: color.withValues(alpha: 0.4),
-                blurRadius: 16,
-                spreadRadius: 2,
+                color: Colors.black.withValues(alpha: isSelected ? 0.15 : 0.08),
+                blurRadius: isSelected ? 12 : 6,
+                spreadRadius: isSelected ? 1 : 0,
+                offset: Offset(0, isSelected ? 4 : 2),
               ),
-          ],
+              // Colored glow when selected
+              if (isSelected)
+                BoxShadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 16,
+                  spreadRadius: 2,
+                ),
+            ],
+          ),
+          child: AnimatedScale(
+            scale: isSelected ? 1.0 : 1.0,
+            duration: const Duration(milliseconds: 150),
+            child: isSelected
+                ? Icon(
+                    Icons.check_rounded,
+                    color: contrastColor,
+                    size: size * 0.45,
+                  )
+                : null,
+          ),
         ),
-        child: AnimatedScale(
-          scale: isSelected ? 1.0 : 1.0,
-          duration: const Duration(milliseconds: 150),
-          child: isSelected
-              ? Icon(
-                  Icons.check_rounded,
-                  color: contrastColor,
-                  size: size * 0.45,
-                )
-              : null,
-        ),
-      ),
       ),
     );
   }
@@ -1196,8 +1199,8 @@ class SplitScreenLayout extends StatelessWidget {
                 if (onCloseDetail != null)
                   IconButton(
                     icon: const Icon(Icons.close),
-                    tooltip:
-                        MaterialLocalizations.of(context).closeButtonTooltip,
+                    tooltip: MaterialLocalizations.of(context)
+                        .closeButtonTooltip,
                     onPressed: onCloseDetail,
                   ),
               ],

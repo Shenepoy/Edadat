@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
@@ -37,9 +37,8 @@ class _ExampleProfileDashboardState
   String Function(String key) get _tr => widget.translate;
 
   void _snack(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<bool> _confirm(String title, {bool isDestructive = false}) async {
@@ -191,9 +190,8 @@ class _ExampleProfileDashboardState
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
                   child: Text(
-                    t(
-                      'session_sheet_hint',
-                    ).replaceAll('{count}', '$_sessionCount'),
+                    t('session_sheet_hint')
+                        .replaceAll('{count}', '$_sessionCount'),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -374,9 +372,9 @@ class _ExampleProfileDashboardState
             leading: SafaehGlyphAvatar(
               icon: Icons.shield_outlined,
               radius: 18,
-              backgroundColor: Theme.of(
-                context,
-              ).colorScheme.surfaceContainerHighest,
+              backgroundColor: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest,
               foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             title: Text(t('notif_grouped')),

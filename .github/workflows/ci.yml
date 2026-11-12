@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FLUTTER_VERSION: "3.47.1"
+  FLUTTER_VERSION: "3.50.0"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
@@ -69,6 +69,14 @@ jobs:
           path: coverage/lcov.info
           if-no-files-found: ignore
 
+      - name: Verify example Wasm and JavaScript fallback
+        working-directory: example
+        run: |
+          flutter build web --release --wasm
+          test -s build/web/main.dart.wasm
+          test -s build/web/main.dart.mjs
+          test -s build/web/main.dart.js
+
   pages:
     name: GitHub Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -99,7 +107,7 @@ jobs:
         working-directory: example
         run: |
           flutter pub get
-          flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+          flutter build web --release --wasm --base-href "/${{ github.event.repository.name }}/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

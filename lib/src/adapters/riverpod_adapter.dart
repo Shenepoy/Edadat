@@ -6,7 +6,9 @@
 library;
 
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../core/setting_definition.dart';
 import '../core/settings_controller.dart';
 import '../core/settings_registry.dart';
@@ -327,10 +329,10 @@ bool isSettingEnabled(
 /// `ref.watch(settingsSearchResultsProvider(query))`.
 final settingsSearchResultsProvider =
     Provider.family<List<SearchResult>, String>((ref, query) {
-  if (query.isEmpty) return [];
-  final index = ref.watch(settingsSearchIndexProvider);
-  return index.search(query);
-});
+      if (query.isEmpty) return [];
+      final index = ref.watch(settingsSearchIndexProvider);
+      return index.search(query);
+    });
 
 /// Provider for search results (legacy; prefer [settingsSearchResultsProvider]).
 ///
@@ -349,7 +351,9 @@ Provider<List<SearchResult>> createSearchProvider(
 /// behavior — it simply delegates to [createSettingProvider].
 ///
 /// Use [createSettingProvider] directly instead.
-@Deprecated('Use createSettingProvider instead — this has no auto-dispose behavior')
+@Deprecated(
+  'Use createSettingProvider instead — this has no auto-dispose behavior',
+)
 NotifierProvider<SettingNotifier<T>, T> createAutoDisposeSettingProvider<T>(
   SettingDefinition<T> setting,
   SettingsController Function() getController,
@@ -379,10 +383,9 @@ class SettingsProviderFactory {
     SettingDefinition<T> setting,
   ) {
     return _cache.putIfAbsent(
-          setting.key,
-          () => createSettingProvider(setting, () => controller),
-        )
-        as NotifierProvider<SettingNotifier<T>, T>;
+      setting.key,
+      () => createSettingProvider(setting, () => controller),
+    ) as NotifierProvider<SettingNotifier<T>, T>;
   }
 
   /// **Deprecated:** Use [create] instead — this has no auto-dispose behavior.

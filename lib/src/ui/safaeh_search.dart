@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:safaeh/safaeh.dart' as safaeh;
 
 import '../core/search_index.dart';
@@ -354,9 +354,8 @@ class _SafaehSettingsSearchOverlayState
                   behavior: HitTestBehavior.opaque,
                   onTap: _close,
                   child: ColoredBox(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.scrim.withValues(alpha: 0.16),
+                    color: Theme.of(context).colorScheme.scrim
+                        .withValues(alpha: 0.16),
                   ),
                 ),
               ),
@@ -488,9 +487,8 @@ class _SafaehSettingsSearchPanel extends StatelessWidget {
                       ? IconButton(
                           key: const ValueKey('safaeh_settings_search_clear'),
                           icon: const Icon(Icons.clear),
-                          tooltip: MaterialLocalizations.of(
-                            context,
-                          ).clearButtonTooltip,
+                          tooltip: MaterialLocalizations.of(context)
+                              .clearButtonTooltip,
                           onPressed: onClear,
                         )
                       : null,
@@ -578,9 +576,8 @@ class _SafaehSettingsSearchResultTile extends StatelessWidget {
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodyLarge
+                ?.copyWith(fontWeight: FontWeight.w600),
           ),
           subtitle: subtitle == null
               ? null
@@ -588,9 +585,8 @@ class _SafaehSettingsSearchResultTile extends StatelessWidget {
                   subtitle!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
           trailing: settingsChevronEnd(context),
         ),

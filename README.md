@@ -119,9 +119,13 @@ Rendered from the [`example/`](example/) catalog (`flutter test test/screenshots
 
 ## Install
 
+Version 1.0 requires Flutter 3.50 / Dart 3.14 and uses
+`package:material_ui/material_ui.dart`. Migrate host Material imports and
+public theme types together; legacy SDK Material types are not interchangeable.
+
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.11.0
+  flutter_settings_framework: ^1.0.0
 ```
 
 Or:
@@ -137,14 +141,14 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.11.0
+      ref: v1.0.0
 ```
 
 ```dart
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 ```
 
-Current version: **0.11.0**.
+Current version: **1.0.0**.
 
 ### Optional Safaeh chrome
 
@@ -229,7 +233,7 @@ final choice = await showSafaehTilePicker<String>(
 ### 1. Define settings
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 
 const generalSection = SettingSection(

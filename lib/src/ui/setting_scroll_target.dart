@@ -4,7 +4,7 @@ library;
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Registry of [GlobalKey]s for setting tiles, used to scroll and highlight.
 class SettingAnchorRegistry {
@@ -29,11 +29,7 @@ class SettingAnchorRegistry {
 
   /// Wraps [child] so it can be scrolled to and highlighted by [settingKey].
   Widget wrap(String settingKey, Widget child) {
-    return SettingAnchor(
-      registry: this,
-      settingKey: settingKey,
-      child: child,
-    );
+    return SettingAnchor(registry: this, settingKey: settingKey, child: child);
   }
 
   /// Scrolls to [settingKey] and briefly highlights the tile.
@@ -123,10 +119,7 @@ class SettingAnchor extends StatelessWidget {
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
               border: active
-                  ? Border.all(
-                      color: theme.colorScheme.primary,
-                      width: 1.5,
-                    )
+                  ? Border.all(color: theme.colorScheme.primary, width: 1.5)
                   : null,
             ),
             child: child,

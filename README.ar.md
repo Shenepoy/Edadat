@@ -59,6 +59,10 @@
 
 <div dir="rtl" lang="ar">
 
+يتطلب الإصدار 1.0 كلاً من Flutter 3.50 وDart 3.14، ويستخدم
+`package:material_ui/material_ui.dart`. يجب ترحيل استيرادات Material وأنواع
+السمات في التطبيق المضيف مع الحزم؛ أنواع SDK القديمة غير قابلة للتبادل.
+
 ## لماذا؟
 
 معظم تطبيقات Flutter تجمع preference notifiers ومفاتيح وtiles متفرقة. ثم تحتاج:
@@ -146,7 +150,7 @@
 
 ```yaml
 dependencies:
-  flutter_settings_framework: ^0.9.0
+  flutter_settings_framework: ^1.0.0
 ```
 
 <div dir="rtl" lang="ar">
@@ -170,7 +174,7 @@ dependencies:
   flutter_settings_framework:
     git:
       url: https://github.com/Zyzto/edadat.git
-      ref: v0.9.0
+      ref: v1.0.0
 ```
 
 ```dart
@@ -194,7 +198,7 @@ import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 </div>
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 
 const generalSection = SettingSection(

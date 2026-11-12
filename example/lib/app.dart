@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_settings_framework/flutter_settings_framework.dart';
 import 'package:flutter_settings_framework/safaeh.dart';
@@ -96,11 +95,7 @@ class _ExampleAppState extends ConsumerState<ExampleApp> {
         debugShowCheckedModeBanner: false,
         locale: catalogFlutterLocale(language),
         supportedLocales: [for (final item in catalogLocales) item.locale],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: catalogTheme(Brightness.light, seed),
         darkTheme: catalogTheme(Brightness.dark, seed),
         themeMode: themeMode,
@@ -115,9 +110,8 @@ class _ExampleAppState extends ConsumerState<ExampleApp> {
           return FocusTraversalGroup(
             policy: WidgetOrderTraversalPolicy(),
             child: MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(textScale)),
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(textScale)),
               child: ThemeRippleHost(
                 overlay: CatalogAppearanceToggles(
                   localeCode: language,
@@ -606,9 +600,8 @@ class _ExampleSettingsPageState extends ConsumerState<ExampleSettingsPage> {
     final payload = jsonEncode(ref.settings.controller.exportAll());
     await Clipboard.setData(ClipboardData(text: payload));
     if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(t('copied'))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(t('copied'))));
     }
   }
 
@@ -627,9 +620,8 @@ class _ExampleSettingsPageState extends ConsumerState<ExampleSettingsPage> {
     if (confirmed != true || !context.mounted) return;
     await ref.settings.controller.resetAll();
     if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(t('reset_done'))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(t('reset_done'))));
     }
   }
 }

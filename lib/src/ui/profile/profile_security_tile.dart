@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Security status row. [ok] colors the trailing icon success vs warning.
 class ProfileSecurityTile extends StatelessWidget {

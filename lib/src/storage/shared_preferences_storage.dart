@@ -3,6 +3,7 @@
 library;
 
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../core/settings_storage.dart';
 
 /// Storage implementation using SharedPreferences.
@@ -82,4 +83,3 @@ class SharedPreferencesStorage implements SettingsStorage {
   @override
   Future<void> reload() => _p.reload();
 }
-

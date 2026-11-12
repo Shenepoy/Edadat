@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// One cell in [ProfileStatGrid].
 class ProfileStatItem {
-  const ProfileStatItem({
-    required this.label,
-    required this.value,
-    this.icon,
-  });
+  const ProfileStatItem({required this.label, required this.value, this.icon});
 
   final Widget label;
   final Widget value;
@@ -15,10 +11,7 @@ class ProfileStatItem {
 
 /// Two-column grid of compact stats.
 class ProfileStatGrid extends StatelessWidget {
-  const ProfileStatGrid({
-    super.key,
-    required this.items,
-  });
+  const ProfileStatGrid({super.key, required this.items});
 
   final List<ProfileStatItem> items;
 

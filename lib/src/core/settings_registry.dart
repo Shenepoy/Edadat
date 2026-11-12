@@ -96,7 +96,9 @@ class SettingsRegistry {
     if (setting.section != null) {
       _settingsBySection.putIfAbsent(setting.section!, () => []);
       // Remove existing entry with same key if present
-      _settingsBySection[setting.section!]!.removeWhere((s) => s.key == setting.key);
+      _settingsBySection[setting.section!]!.removeWhere(
+        (s) => s.key == setting.key,
+      );
       _settingsBySection[setting.section!]!.add(setting);
     }
   }
@@ -259,6 +261,6 @@ class SettingNotFoundError extends Error {
   SettingNotFoundError(this.key);
 
   @override
-  String toString() => 'SettingNotFoundError: Setting with key "$key" not found in registry';
+  String toString() =>
+      'SettingNotFoundError: Setting with key "$key" not found in registry';
 }
-

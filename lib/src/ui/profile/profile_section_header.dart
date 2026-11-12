@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Padded section title with an optional trailing action.
 class ProfileSectionHeader extends StatelessWidget {

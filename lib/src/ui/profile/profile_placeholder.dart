@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Visual kind for [ProfilePlaceholder].
 enum ProfilePlaceholderKind { loading, empty, error }
@@ -63,10 +63,7 @@ class ProfilePlaceholder extends StatelessWidget {
               child: message!,
             ),
           ],
-          if (action != null) ...[
-            const SizedBox(height: 12),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 12), action!],
         ],
       ),
     );

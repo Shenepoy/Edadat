@@ -5,7 +5,7 @@
 /// including storage keys, default values, validation, and search terms.
 library;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The type of a setting value for serialization purposes.
 enum SettingType { string, int, double, bool, stringList, color, action }
@@ -466,11 +466,11 @@ class ActionSetting extends SettingDefinition<bool> {
     super.order,
     super.visible,
   }) : super(
-          key: key,
-          defaultValue: false,
-          type: SettingType.action,
-          persist: false,
-        );
+         key: key,
+         defaultValue: false,
+         type: SettingType.action,
+         persist: false,
+       );
 
   @override
   Object? toStorable(bool value) => null;

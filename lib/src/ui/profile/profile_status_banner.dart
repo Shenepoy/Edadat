@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Color treatment for [ProfileStatusBanner].
 enum ProfileBannerTone { info, success, warning, error }
@@ -60,10 +60,7 @@ class ProfileStatusBanner extends StatelessWidget {
               child: message!,
             ),
           ],
-          if (action != null) ...[
-            const SizedBox(height: 8),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 8), action!],
         ],
       ),
     );
